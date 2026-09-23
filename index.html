@@ -1,0 +1,2112 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>English Daily</title>
+<meta name="description" content="Aplikasi belajar kosakata & grammar bahasa Inggris setiap hari.">
+<meta name="theme-color" content="#2F5FE0">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    font-size:16px;
+    --bg:#F5F6FA;
+    --surface:#FFFFFF;
+    --surface-2:#EDEFF5;
+    --surface-3:#E2E5EE;
+    --ink:#161A25;
+    --ink-muted:#5C6478;
+    --ink-faint:#9096A6;
+    --accent:#2F5FE0;
+    --accent-strong:#1F46B8;
+    --accent-soft:#E7ECFC;
+    --warm:#DD8A3C;
+    --warm-soft:#FBEBD8;
+    --good:#2E9E6B;
+    --good-soft:#E3F5EC;
+    --bad:#D64550;
+    --bad-soft:#FBE6E8;
+    --border:#E2E5EE;
+    --shadow:rgba(23,31,58,0.10);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1116;
+      --surface:#171B24;
+      --surface-2:#1E2330;
+      --surface-3:#2A2F3D;
+      --ink:#EEF0F5;
+      --ink-muted:#9AA3B7;
+      --ink-faint:#6B7386;
+      --accent:#8098FF;
+      --accent-strong:#A6B6FF;
+      --accent-soft:#222A47;
+      --warm:#EFA966;
+      --warm-soft:#3A2A18;
+      --good:#57CE99;
+      --good-soft:#1B3327;
+      --bad:#FF7B84;
+      --bad-soft:#3A1E22;
+      --border:#2A2F3D;
+      --shadow:rgba(0,0,0,0.45);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1116;
+    --surface:#171B24;
+    --surface-2:#1E2330;
+    --surface-3:#2A2F3D;
+    --ink:#EEF0F5;
+    --ink-muted:#9AA3B7;
+    --ink-faint:#6B7386;
+    --accent:#8098FF;
+    --accent-strong:#A6B6FF;
+    --accent-soft:#222A47;
+    --warm:#EFA966;
+    --warm-soft:#3A2A18;
+    --good:#57CE99;
+    --good-soft:#1B3327;
+    --bad:#FF7B84;
+    --bad-soft:#3A1E22;
+    --border:#2A2F3D;
+    --shadow:rgba(0,0,0,0.45);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{
+    height:100%;
+    display:flex;
+    justify-content:center;
+    padding-block:0;
+  }
+  .app{
+    width:100%;
+    max-width:480px;
+    height:100%;
+    background:var(--surface);
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    overflow:hidden;
+  }
+  @media (min-width:520px){
+    .page{ padding-block:28px; }
+    .app{
+      height:min(860px, calc(100% - 56px));
+      border-radius:28px;
+      box-shadow:0 24px 60px var(--shadow), 0 0 0 1px var(--border);
+    }
+  }
+
+  .appbar{
+    flex:none;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    padding:calc(env(safe-area-inset-top,0px) + .9rem) 1.1rem .9rem;
+    border-bottom:1px solid var(--border);
+  }
+  .appbar h1{
+    font-family:"Fraunces",serif;
+    font-size:1.15rem;
+    font-weight:600;
+    margin:0;
+    letter-spacing:.01em;
+  }
+  .streak-chip{
+    display:flex;
+    align-items:center;
+    gap:.35rem;
+    background:var(--warm-soft);
+    color:var(--warm);
+    border-radius:999px;
+    padding:.3rem .65rem;
+    font-family:"IBM Plex Mono",monospace;
+    font-weight:600;
+    font-size:.85rem;
+  }
+  .streak-chip svg{width:15px;height:15px;}
+
+  #view{
+    flex:1;
+    overflow-y:auto;
+    padding:1.1rem 1.1rem calc(1.5rem + env(safe-area-inset-bottom,0px));
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .tabbar{
+    flex:none;
+    display:flex;
+    border-top:1px solid var(--border);
+    padding:.4rem .5rem calc(.5rem + env(safe-area-inset-bottom,0px));
+    background:var(--surface);
+  }
+  .tab{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:.2rem;
+    padding:.35rem 0;
+    border:none;
+    background:none;
+    color:var(--ink-faint);
+    font-family:"Inter",sans-serif;
+    font-size:.68rem;
+    font-weight:600;
+    cursor:pointer;
+    border-radius:.6rem;
+  }
+  .tab svg{width:21px;height:21px;}
+  .tab .tab-glyph{
+    font-family:"Fraunces",serif;
+    font-size:1.05rem;
+    line-height:1;
+    font-weight:600;
+  }
+  .tab.active{ color:var(--accent); }
+  .tab:active{ background:var(--surface-2); }
+
+  h2.section-title{
+    font-family:"Fraunces",serif;
+    font-size:1.3rem;
+    font-weight:600;
+    margin:0 0 .9rem;
+    text-wrap:balance;
+  }
+  p.section-sub{
+    color:var(--ink-muted);
+    font-size:.9rem;
+    line-height:1.5;
+    margin:0 0 1rem;
+  }
+
+  .card{
+    background:var(--surface-2);
+    border-radius:1.1rem;
+    padding:1.1rem;
+  }
+  .hero-card{
+    background:linear-gradient(165deg, var(--accent-soft), var(--surface-2) 70%);
+    border-radius:1.4rem;
+    padding:1.4rem 1.3rem;
+    margin-bottom:1.1rem;
+  }
+  .hero-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:.9rem;
+  }
+  .flame-badge{
+    display:flex;
+    align-items:center;
+    gap:.5rem;
+  }
+  .flame-badge svg{width:26px;height:26px;color:var(--warm);}
+  .flame-num{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:1.5rem;
+    font-weight:600;
+    line-height:1;
+  }
+  .flame-label{
+    font-size:.72rem;
+    color:var(--ink-muted);
+    margin-top:.1rem;
+  }
+  .hero-sub{
+    font-size:.9rem;
+    color:var(--ink-muted);
+    margin:0 0 1.1rem;
+    line-height:1.5;
+  }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.4rem;
+    width:100%;
+    padding:.85rem 1rem;
+    border-radius:.9rem;
+    border:none;
+    font-family:"Inter",sans-serif;
+    font-weight:600;
+    font-size:.95rem;
+    cursor:pointer;
+  }
+  .btn-primary{ background:var(--accent); color:#fff; }
+  .btn-primary:active{ background:var(--accent-strong); }
+  .btn-secondary{ background:var(--surface); color:var(--accent); border:1.5px solid var(--accent); }
+  .btn-ghost{ background:transparent; color:var(--ink-muted); }
+  .btn-danger{ background:transparent; color:var(--bad); border:1.5px solid var(--bad); }
+  .btn-danger:active{ background:var(--bad-soft); }
+  .btn:disabled{ opacity:.5; cursor:default; }
+
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.68rem;
+    font-weight:600;
+    letter-spacing:.02em;
+    padding:.15rem .5rem;
+    border-radius:999px;
+    background:var(--surface-3);
+    color:var(--ink-muted);
+  }
+  .badge-accent{ background:var(--accent-soft); color:var(--accent); }
+  .badge-good{ background:var(--good-soft); color:var(--good); }
+  .badge-muted{ background:var(--surface-3); color:var(--ink-faint); }
+
+  .stat-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.6rem;
+    margin-bottom:1.2rem;
+  }
+  .stat-tile{
+    background:var(--surface-2);
+    border-radius:1rem;
+    padding:.9rem .6rem;
+    text-align:center;
+  }
+  .stat-value{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:1.4rem;
+    font-weight:600;
+    font-variant-numeric:tabular-nums;
+  }
+  .stat-caption{
+    font-size:.68rem;
+    color:var(--ink-muted);
+    margin-top:.15rem;
+    line-height:1.3;
+  }
+
+  .level-row{
+    display:flex;
+    align-items:center;
+    gap:.7rem;
+    padding:.55rem 0;
+  }
+  .level-row .lv-tag{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.72rem;
+    font-weight:600;
+    color:var(--ink-muted);
+    width:1.6rem;
+    flex:none;
+  }
+  .level-track{
+    position:relative;
+    flex:1;
+    height:.5rem;
+    border-radius:999px;
+    background:var(--surface-3);
+    overflow:hidden;
+  }
+  .level-fill{
+    position:absolute;
+    left:0;
+    top:0;
+    height:100%;
+    border-radius:999px;
+    background:var(--good);
+  }
+  .level-fill-learning{
+    background:var(--good);
+    opacity:.32;
+  }
+  .level-row .lv-count{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.72rem;
+    color:var(--ink-muted);
+    flex:none;
+    font-variant-numeric:tabular-nums;
+  }
+
+  .word-group{ margin-bottom:1.3rem; }
+  .word-group-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:.4rem;
+  }
+  .word-group-head h3{
+    font-family:"Fraunces",serif;
+    font-size:.95rem;
+    font-weight:600;
+    margin:0;
+  }
+  .word-group-note{
+    font-family:"Inter",sans-serif;
+    font-size:.72rem;
+    font-weight:400;
+    color:var(--ink-faint);
+  }
+  .word-row{
+    display:flex;
+    align-items:center;
+    gap:.65rem;
+    padding:.65rem .2rem;
+    border-bottom:1px solid var(--border);
+  }
+  .word-row:last-child{ border-bottom:none; }
+  .word-dot{
+    width:.5rem;height:.5rem;border-radius:50%;flex:none;
+    background:var(--ink-faint);
+  }
+  .word-dot.learning{ background:var(--accent); }
+  .word-dot.mastered{ background:var(--good); }
+  .word-main{ flex:1; min-width:0; }
+  .word-en{ font-weight:600; font-size:.95rem; }
+  .word-id{ color:var(--ink-muted); font-size:.82rem; }
+
+  details.topic{
+    background:var(--surface-2);
+    border-radius:1rem;
+    padding:.2rem .95rem;
+    margin-bottom:.7rem;
+  }
+  details.topic summary{
+    list-style:none;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.6rem;
+    padding:.85rem 0;
+    cursor:pointer;
+    font-weight:600;
+    font-size:.92rem;
+  }
+  details.topic summary::-webkit-details-marker{ display:none; }
+  details.topic summary .chev{
+    color:var(--ink-faint);
+    transition:transform .15s ease;
+    flex:none;
+  }
+  details.topic[open] summary .chev{ transform:rotate(90deg); }
+  .topic-body{ padding:0 0 1rem; }
+  .topic-explain{ font-size:.87rem; color:var(--ink-muted); line-height:1.55; margin:0 0 .7rem; }
+  .topic-example{
+    font-size:.85rem;
+    padding:.3rem 0;
+    border-left:2px solid var(--accent);
+    padding-left:.6rem;
+    margin-bottom:.35rem;
+    color:var(--ink);
+  }
+  .locked-row{
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+    padding:.55rem .2rem;
+    color:var(--ink-faint);
+    font-size:.86rem;
+    border-bottom:1px solid var(--border);
+  }
+  .locked-row:last-child{border-bottom:none;}
+  .locked-row svg{ width:15px;height:15px;flex:none; }
+  .locked-level-head{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.72rem;
+    font-weight:600;
+    color:var(--ink-faint);
+    margin:1rem 0 .3rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+
+  /* ---- session overlay ---- */
+  .session{
+    position:absolute; inset:0;
+    background:var(--surface);
+    display:flex; flex-direction:column;
+    z-index:20;
+  }
+  .session[hidden]{ display:none; }
+  .session-top{
+    flex:none;
+    display:flex;
+    align-items:center;
+    gap:.7rem;
+    padding:calc(env(safe-area-inset-top,0px) + .9rem) 1.1rem .8rem;
+  }
+  .session-close{
+    background:none;border:none;color:var(--ink-faint);
+    font-size:1.3rem;line-height:1;cursor:pointer;padding:.2rem;
+  }
+  .session-progress{
+    flex:1;
+    height:.4rem;
+    background:var(--surface-3);
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .session-progress-fill{
+    height:100%;background:var(--accent);border-radius:999px;
+    transition:width .2s ease;
+  }
+  .session-body{
+    flex:1;
+    overflow-y:auto;
+    padding:1rem 1.3rem;
+    display:flex;
+    flex-direction:column;
+  }
+  .session-bottom{
+    flex:none;
+    padding:.9rem 1.1rem calc(1rem + env(safe-area-inset-bottom,0px));
+    border-top:1px solid var(--border);
+  }
+
+  .flashcard{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    gap:1rem;
+    padding:1rem 0;
+  }
+  .flashcard .fc-level{ margin-bottom:.2rem; }
+  .flashcard .fc-prompt{
+    font-size:1rem;
+    color:var(--ink-muted);
+  }
+  .flashcard .fc-word{
+    font-family:"Fraunces",serif;
+    font-size:2.1rem;
+    font-weight:600;
+    text-wrap:balance;
+  }
+  .flashcard .fc-example{
+    font-size:.95rem;
+    color:var(--ink-muted);
+    line-height:1.55;
+    max-width:22rem;
+  }
+  .flashcard .fc-example b{ color:var(--accent); font-weight:700; }
+
+  .rate-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:.5rem;
+  }
+  .rate-btn{
+    border:1.5px solid var(--border);
+    background:var(--surface);
+    border-radius:.8rem;
+    padding:.6rem .3rem;
+    font-family:"Inter",sans-serif;
+    font-weight:600;
+    font-size:.78rem;
+    cursor:pointer;
+    color:var(--ink);
+  }
+  .rate-btn.rate-0{ color:var(--bad); }
+  .rate-btn.rate-5{ color:var(--good); }
+
+  .quiz-meta{ margin:0 0 .6rem; }
+  .quiz-q{
+    font-family:"Fraunces",serif;
+    font-size:1.2rem;
+    font-weight:600;
+    margin:0 0 1.1rem;
+    text-wrap:balance;
+  }
+  .quiz-options{ display:flex; flex-direction:column; gap:.6rem; }
+  .quiz-opt{
+    border:1.5px solid var(--border);
+    background:var(--surface);
+    border-radius:.8rem;
+    padding:.75rem .9rem;
+    font-size:.92rem;
+    text-align:left;
+    cursor:pointer;
+    color:var(--ink);
+  }
+  .quiz-opt.correct{ border-color:var(--good); background:var(--good-soft); color:var(--good); }
+  .quiz-opt.wrong{ border-color:var(--bad); background:var(--bad-soft); color:var(--bad); }
+  .quiz-opt:disabled{ cursor:default; }
+
+  .summary-wrap{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    gap:.4rem;
+  }
+  .summary-wrap .sw-check{ color:var(--good); width:52px;height:52px; margin-bottom:.4rem; }
+  .summary-wrap h2{
+    font-family:"Fraunces",serif;
+    font-size:1.4rem;
+    margin:0 0 .2rem;
+  }
+  .summary-list{
+    margin:1.1rem 0 0;
+    display:flex;
+    flex-direction:column;
+    gap:.5rem;
+    width:100%;
+  }
+  .summary-item{
+    display:flex;
+    justify-content:space-between;
+    background:var(--surface-2);
+    border-radius:.8rem;
+    padding:.65rem .9rem;
+    font-size:.88rem;
+  }
+  .summary-item b{ font-family:"IBM Plex Mono",monospace; }
+
+  .empty-note{
+    color:var(--ink-muted);
+    font-size:.88rem;
+    text-align:center;
+    padding:2.2rem 1rem;
+    line-height:1.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="app">
+    <header class="appbar">
+      <h1>English Daily</h1>
+      <div class="streak-chip" id="streak-chip">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c4.4 0 7-2.7 7-6.5 0-3-1.8-4.7-3-6.3.4 2-.5 3-1.5 3.3-.2-2.6-1.5-5-4-6.8-.3 2-1 3.4-2.3 4.7C6.8 11.8 5 13.7 5 16.2 5 19.6 7.8 22 12 22Z"/></svg>
+        <span id="streak-num">0</span>
+      </div>
+    </header>
+
+    <main id="view"></main>
+
+    <nav class="tabbar">
+      <button class="tab active" data-tab="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg>
+        Hari Ini
+      </button>
+      <button class="tab" data-tab="vocab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H12v18H6.5A2.5 2.5 0 0 1 4 18.5v-13Z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H12v18h5.5a2.5 2.5 0 0 0 2.5-2.5v-13Z"/></svg>
+        Kosakata
+      </button>
+      <button class="tab" data-tab="grammar">
+        <span class="tab-glyph">Aa</span>
+        Grammar
+      </button>
+      <button class="tab" data-tab="progress">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 19V13"/><path d="M12 19V8"/><path d="M19 19V4"/></svg>
+        Progres
+      </button>
+    </nav>
+
+    <section class="session" id="session" hidden>
+      <div class="session-top">
+        <button class="session-close" id="session-close" aria-label="Tutup sesi">&times;</button>
+        <div class="session-progress"><div class="session-progress-fill" id="session-progress-fill" style="width:0%"></div></div>
+      </div>
+      <div class="session-body" id="session-body"></div>
+      <div class="session-bottom" id="session-bottom"></div>
+    </section>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- content ---------------- */
+
+  var VOCAB_KIND_LABELS = { phrasal: "frasa", formal: "formal", gerund: "gerund", casual: "percakapan", idiom: "idiom", topical: "tema" };
+
+  var VOCAB = [
+
+    {id:"weather", word:"weather", translation:"cuaca", sentence:"The {blank} is cold this morning.", level:"A1"},
+    {id:"journey", word:"journey", translation:"perjalanan", sentence:"Our {blank} to Bali took six hours.", level:"A1"},
+    {id:"borrow", word:"borrow", translation:"meminjam", sentence:"Can I {blank} your pen for a minute?", level:"A1"},
+    {id:"crowded", word:"crowded", translation:"ramai / padat", sentence:"The train was very {blank} this morning.", level:"A1"},
+    {id:"improve", word:"improve", translation:"meningkatkan", sentence:"I want to {blank} my English speaking.", level:"A1"},
+
+    {id:"achieve", word:"achieve", translation:"mencapai", sentence:"She worked hard to {blank} her goals.", level:"A2"},
+    {id:"reliable", word:"reliable", translation:"dapat diandalkan", sentence:"He is a very {blank} colleague.", level:"A2"},
+    {id:"postpone", word:"postpone", translation:"menunda", sentence:"We had to {blank} the meeting until Monday.", level:"A2"},
+    {id:"considerable", word:"considerable", translation:"cukup besar / signifikan", sentence:"There was a {blank} increase in sales.", level:"A2"},
+    {id:"commute", word:"commute", translation:"pulang-pergi kerja", sentence:"I {blank} to the office by train every day.", level:"A2"},
+
+    {id:"inevitable", word:"inevitable", translation:"tak terhindarkan", sentence:"Change is {blank} in a growing company.", level:"B1"},
+    {id:"reluctant", word:"reluctant", translation:"enggan / segan", sentence:"He was {blank} to accept the offer.", level:"B1"},
+    {id:"compelling", word:"compelling", translation:"meyakinkan / menarik", sentence:"She gave a {blank} argument for the plan.", level:"B1"},
+    {id:"subsequently", word:"subsequently", translation:"selanjutnya / kemudian", sentence:"The plan failed and was {blank} cancelled.", level:"B1"},
+    {id:"discrepancy", word:"discrepancy", translation:"ketidaksesuaian / selisih", sentence:"There is a {blank} between the two reports.", level:"B1"},
+
+    {id:"ambiguous", word:"ambiguous", translation:"ambigu / bermakna ganda", sentence:"His answer was {blank} and hard to interpret.", level:"B2"},
+    {id:"underpin", word:"underpin", translation:"mendasari / mendukung", sentence:"Strong data {blank} the company's decision.", level:"B2"},
+    {id:"discern", word:"discern", translation:"membedakan / mengenali", sentence:"It's hard to {blank} the difference between the two colors.", level:"B2"},
+    {id:"mitigate", word:"mitigate", translation:"meredakan / mengurangi", sentence:"New policies aim to {blank} the risk of delays.", level:"B2"},
+    {id:"nuanced", word:"nuanced", translation:"bernuansa / halus perbedaannya", sentence:"Her explanation was {blank} and well thought out.", level:"B2"},
+
+    // Phrasal verbs -- common conversational word combinations whose
+    // meaning changes when the words are said together.
+    {id:"give-up", word:"give up", translation:"menyerah", sentence:"Don't {blank}, you're almost done!", level:"A1", kind:"phrasal"},
+    {id:"find-out", word:"find out", translation:"mengetahui / mencari tahu", sentence:"I need to {blank} what happened.", level:"A1", kind:"phrasal"},
+    {id:"look-for", word:"look for", translation:"mencari", sentence:"Can you help me {blank} my keys?", level:"A1", kind:"phrasal"},
+    {id:"hang-out", word:"hang out", translation:"nongkrong / menghabiskan waktu bersama", sentence:"We usually {blank} at the mall on weekends.", level:"A1", kind:"phrasal"},
+    {id:"show-up", word:"show up", translation:"muncul / datang", sentence:"He didn't {blank} to the meeting.", level:"A2", kind:"phrasal"},
+    {id:"look-forward-to", word:"look forward to", translation:"menantikan", sentence:"I {blank} seeing you next week.", level:"A2", kind:"phrasal"},
+    {id:"come-across", word:"come across", translation:"menemukan secara tidak sengaja", sentence:"I {blank} an old photo of us yesterday.", level:"A2", kind:"phrasal"},
+    {id:"run-into", word:"run into", translation:"bertemu seseorang tanpa sengaja", sentence:"I {blank} my old teacher at the store.", level:"A2", kind:"phrasal"},
+    {id:"get-along", word:"get along", translation:"akur / bergaul dengan baik", sentence:"My sister and I {blank} very well.", level:"A2", kind:"phrasal"},
+    {id:"put-off", word:"put off", translation:"menunda", sentence:"We had to {blank} the trip because of the rain.", level:"A2", kind:"phrasal"},
+    {id:"carry-on", word:"carry on", translation:"melanjutkan", sentence:"Please {blank} with your work.", level:"A2", kind:"phrasal"},
+    {id:"catch-up", word:"catch up", translation:"mengobrol setelah lama tidak bertemu / mengejar ketertinggalan", sentence:"Let's {blank} over coffee sometime.", level:"A2", kind:"phrasal"},
+    {id:"turn-down", word:"turn down", translation:"menolak (tawaran)", sentence:"She decided to {blank} the job offer.", level:"A2", kind:"phrasal"},
+    {id:"deal-with", word:"deal with", translation:"mengatasi / menghadapi", sentence:"I don't know how to {blank} this problem.", level:"A2", kind:"phrasal"},
+    {id:"figure-out", word:"figure out", translation:"memikirkan solusi / memahami", sentence:"Can you {blank} how this works?", level:"B1", kind:"phrasal"},
+    {id:"break-down", word:"break down", translation:"mogok (kendaraan) / kehilangan kendali emosi", sentence:"I hope the car doesn't {blank} again.", level:"B1", kind:"phrasal"},
+    {id:"get-over", word:"get over", translation:"pulih dari / melupakan", sentence:"It took him months to {blank} the breakup.", level:"B1", kind:"phrasal"},
+    {id:"keep-up-with", word:"keep up with", translation:"mengikuti perkembangan, tidak tertinggal", sentence:"It's hard to {blank} all the new technology.", level:"B1", kind:"phrasal"},
+    {id:"work-out", word:"work out", translation:"berhasil terpecahkan / berolahraga", sentence:"I'm sure things will {blank} fine.", level:"B1", kind:"phrasal"},
+    {id:"bring-up", word:"bring up", translation:"mengangkat topik / membesarkan (anak)", sentence:"I don't want to {blank} that topic again.", level:"B1", kind:"phrasal"},
+
+    // Formal / professional vocabulary -- for emails, meetings, reports.
+    {id:"therefore", word:"therefore", translation:"oleh karena itu", sentence:"Sales have declined; {blank}, we need a new strategy.", level:"A2", kind:"formal"},
+    {id:"regarding", word:"regarding", translation:"terkait / mengenai", sentence:"I am writing {blank} the meeting schedule for next week.", level:"A2", kind:"formal"},
+    {id:"clarify", word:"clarify", translation:"memperjelas", sentence:"Let me {blank} what I meant in my last email.", level:"A2", kind:"formal"},
+    {id:"compromise", word:"compromise", translation:"kompromi / jalan tengah", sentence:"Both parties agreed to a {blank} that satisfied everyone.", level:"A2", kind:"formal"},
+    {id:"furthermore", word:"furthermore", translation:"selain itu / lebih lanjut", sentence:"The proposal is cost-effective; {blank}, it can be implemented quickly.", level:"B1", kind:"formal"},
+    {id:"nevertheless", word:"nevertheless", translation:"meskipun demikian", sentence:"The results were disappointing; {blank}, the team stayed motivated.", level:"B1", kind:"formal"},
+    {id:"feasible", word:"feasible", translation:"layak / dapat dilaksanakan", sentence:"Is it {blank} to finish this project within two months?", level:"B1", kind:"formal"},
+    {id:"stakeholder", word:"stakeholder", translation:"pemangku kepentingan", sentence:"All {blank}s must approve the plan before we proceed.", level:"B1", kind:"formal"},
+    {id:"please-find-attached", word:"please find attached", translation:"berikut kami lampirkan", sentence:"{blank} the report you requested yesterday.", level:"B1", kind:"formal"},
+    {id:"at-your-earliest-convenience", word:"at your earliest convenience", translation:"secepatnya (secara sopan)", sentence:"Please respond {blank}, as the deadline is approaching.", level:"B2", kind:"formal"},
+
+    // Gerund (verb+ing used as a noun) -- one of the trickiest patterns for
+    // learners past the basics, since it turns an action into a subject/object.
+    {id:"networking-g", word:"networking", translation:"membangun relasi/jaringan", sentence:"{blank} at industry events can open new career opportunities.", level:"B1", kind:"gerund"},
+    {id:"brainstorming-g", word:"brainstorming", translation:"curah pendapat", sentence:"{blank} with the team helped us find a creative solution.", level:"A2", kind:"gerund"},
+    {id:"multitasking-g", word:"multitasking", translation:"mengerjakan banyak hal sekaligus", sentence:"{blank} often reduces the quality of your work.", level:"A2", kind:"gerund"},
+    {id:"negotiating-g", word:"negotiating", translation:"bernegosiasi", sentence:"{blank} a better price takes patience and confidence.", level:"A2", kind:"gerund"},
+    {id:"procrastinating-g", word:"procrastinating", translation:"menunda-nunda", sentence:"{blank} on important tasks only increases your stress later.", level:"A2", kind:"gerund"},
+    {id:"outsourcing-g", word:"outsourcing", translation:"alih daya", sentence:"{blank} production to another country can lower costs.", level:"B1", kind:"gerund"},
+    {id:"troubleshooting-g", word:"troubleshooting", translation:"pemecahan masalah teknis", sentence:"{blank} the server issue took the whole afternoon.", level:"B1", kind:"gerund"},
+    {id:"delegating-g", word:"delegating", translation:"mendelegasikan tugas", sentence:"{blank} tasks to your team builds their confidence.", level:"B1", kind:"gerund"},
+
+    // Casual / everyday conversational fillers and expressions.
+    {id:"by-the-way", word:"by the way", translation:"ngomong-ngomong", sentence:"{blank}, did you see the email I sent this morning?", level:"A2", kind:"casual"},
+    {id:"to-be-honest", word:"to be honest", translation:"jujur saja / terus terang", sentence:"{blank}, I don't think the plan will work.", level:"A2", kind:"casual"},
+    {id:"make-sense", word:"make sense", translation:"masuk akal", sentence:"Does this explanation {blank} to you?", level:"A2", kind:"casual"},
+    {id:"i-guess", word:"I guess", translation:"kurasa / sepertinya", sentence:"{blank} we should leave now if we want to catch the train.", level:"A2", kind:"casual"},
+    {id:"sort-of", word:"sort of", translation:"agak / semacam", sentence:"I'm {blank} nervous about the interview tomorrow.", level:"A2", kind:"casual"},
+    {id:"it-depends", word:"it depends", translation:"tergantung", sentence:"Will you come to the party? {blank} on my schedule.", level:"A1", kind:"casual"},
+
+    // More phrasal verbs.
+    {id:"check-in", word:"check in", translation:"melapor masuk (hotel/bandara)", sentence:"Please {blank} at least two hours before your flight.", level:"A2", kind:"phrasal"},
+    {id:"check-out", word:"check out", translation:"melapor keluar (hotel) / memeriksa", sentence:"We need to {blank} of the hotel by noon.", level:"A2", kind:"phrasal"},
+    {id:"log-in", word:"log in", translation:"masuk ke akun/sistem", sentence:"You need a password to {blank} to this system.", level:"A1", kind:"phrasal"},
+    {id:"log-out", word:"log out", translation:"keluar dari akun/sistem", sentence:"Don't forget to {blank} when you're done.", level:"A1", kind:"phrasal"},
+    {id:"set-up", word:"set up", translation:"mendirikan / menyiapkan", sentence:"It took months to {blank} the new office.", level:"A2", kind:"phrasal"},
+    {id:"back-up", word:"back up", translation:"mencadangkan (data) / mendukung", sentence:"Always {blank} your files before updating the system.", level:"A2", kind:"phrasal"},
+    {id:"point-out", word:"point out", translation:"menunjukkan (kesalahan/hal penting)", sentence:"Can you {blank} where I made a mistake?", level:"A2", kind:"phrasal"},
+    {id:"sort-out", word:"sort out", translation:"menyelesaikan / merapikan", sentence:"We need to {blank} this problem before the deadline.", level:"A2", kind:"phrasal"},
+    {id:"hand-in", word:"hand in", translation:"menyerahkan (tugas)", sentence:"Please {blank} your assignment by Friday.", level:"A1", kind:"phrasal"},
+    {id:"take-over", word:"take over", translation:"mengambil alih", sentence:"She will {blank} as manager next month.", level:"B1", kind:"phrasal"},
+    {id:"take-off", word:"take off", translation:"lepas landas / melepas (pakaian)", sentence:"The plane will {blank} in ten minutes.", level:"A2", kind:"phrasal"},
+    {id:"get-back", word:"get back", translation:"kembali", sentence:"What time will you {blank} from the trip?", level:"A1", kind:"phrasal"},
+    {id:"go-through", word:"go through", translation:"melalui / mengalami", sentence:"It's hard to {blank} a difficult time alone.", level:"B1", kind:"phrasal"},
+    {id:"come-up-with", word:"come up with", translation:"memikirkan (ide/solusi)", sentence:"We need to {blank} a better plan.", level:"B1", kind:"phrasal"},
+    {id:"come-back", word:"come back", translation:"kembali", sentence:"I hope you {blank} soon.", level:"A1", kind:"phrasal"},
+    {id:"cut-down-on", word:"cut down on", translation:"mengurangi", sentence:"You should {blank} sugar for better health.", level:"A2", kind:"phrasal"},
+    {id:"drop-by", word:"drop by", translation:"mampir", sentence:"Feel free to {blank} anytime this week.", level:"A2", kind:"phrasal"},
+    {id:"end-up", word:"end up", translation:"berakhir (dengan hasil tertentu)", sentence:"If you don't plan well, you might {blank} losing money.", level:"A2", kind:"phrasal"},
+    {id:"fall-apart", word:"fall apart", translation:"hancur berantakan / gagal total", sentence:"Their plan started to {blank} after the first mistake.", level:"B1", kind:"phrasal"},
+    {id:"fill-in", word:"fill in", translation:"mengisi (formulir) / menggantikan sementara", sentence:"Please {blank} this form with your details.", level:"A2", kind:"phrasal"},
+    {id:"fill-out", word:"fill out", translation:"mengisi (formulir lengkap)", sentence:"You need to {blank} this application carefully.", level:"A2", kind:"phrasal"},
+    {id:"get-by", word:"get by", translation:"bertahan hidup dengan seadanya", sentence:"It's hard to {blank} on such a small salary.", level:"B1", kind:"phrasal"},
+    {id:"hold-on", word:"hold on", translation:"tunggu sebentar / berpegangan", sentence:"{blank}, I need to check my calendar first.", level:"A1", kind:"phrasal"},
+    {id:"hold-up", word:"hold up", translation:"menahan / menunda", sentence:"A traffic jam can really {blank} your schedule.", level:"B1", kind:"phrasal"},
+    {id:"look-after", word:"look after", translation:"menjaga / merawat", sentence:"Can you {blank} my cat while I'm away?", level:"A1", kind:"phrasal"},
+    {id:"look-into", word:"look into", translation:"menyelidiki", sentence:"The manager promised to {blank} the complaint.", level:"A2", kind:"phrasal"},
+    {id:"look-up", word:"look up", translation:"mencari (informasi)", sentence:"I'll {blank} the address online.", level:"A1", kind:"phrasal"},
+    {id:"make-up", word:"make up", translation:"berbaikan / mengarang cerita", sentence:"They decided to {blank} after the argument.", level:"A2", kind:"phrasal"},
+    {id:"move-on", word:"move on", translation:"melanjutkan hidup / beralih ke hal lain", sentence:"It's time to {blank} to the next topic.", level:"A2", kind:"phrasal"},
+    {id:"pick-up", word:"pick up", translation:"menjemput / mengambil", sentence:"Can you {blank} the kids from school today?", level:"A1", kind:"phrasal"},
+    {id:"pull-out", word:"pull out", translation:"mengundurkan diri / menarik keluar", sentence:"The company decided to {blank} of the deal.", level:"B1", kind:"phrasal"},
+    {id:"put-together", word:"put together", translation:"menyusun / merakit", sentence:"It took hours to {blank} the new furniture.", level:"A2", kind:"phrasal"},
+    {id:"run-out-of", word:"run out of", translation:"kehabisan", sentence:"We're about to {blank} time, so let's hurry.", level:"A2", kind:"phrasal"},
+    {id:"settle-down", word:"settle down", translation:"menetap / menjadi tenang", sentence:"After years of traveling, they finally decided to {blank}.", level:"B1", kind:"phrasal"},
+    {id:"show-off", word:"show off", translation:"pamer", sentence:"He likes to {blank} his new car.", level:"A2", kind:"phrasal"},
+    {id:"sign-up", word:"sign up", translation:"mendaftar", sentence:"You can {blank} for the course online.", level:"A1", kind:"phrasal"},
+    {id:"slow-down", word:"slow down", translation:"memperlambat", sentence:"Please {blank}, this road is dangerous.", level:"A1", kind:"phrasal"},
+    {id:"speed-up", word:"speed up", translation:"mempercepat", sentence:"We need to {blank} the process before the deadline.", level:"A2", kind:"phrasal"},
+    {id:"stand-out", word:"stand out", translation:"menonjol", sentence:"A good resume should {blank} from the rest.", level:"A2", kind:"phrasal"},
+    {id:"stick-to", word:"stick to", translation:"berpegang pada / tetap pada", sentence:"Let's {blank} the original plan.", level:"A2", kind:"phrasal"},
+    {id:"take-back", word:"take back", translation:"menarik kembali (ucapan)", sentence:"I {blank} what I said earlier, I was wrong.", level:"A2", kind:"phrasal"},
+    {id:"throw-away", word:"throw away", translation:"membuang", sentence:"Don't {blank} that box, we might need it later.", level:"A1", kind:"phrasal"},
+    {id:"turn-into", word:"turn into", translation:"berubah menjadi", sentence:"A small argument can {blank} a big fight.", level:"A2", kind:"phrasal"},
+    {id:"turn-out", word:"turn out", translation:"ternyata / berakhir dengan", sentence:"I hope everything will {blank} fine.", level:"A2", kind:"phrasal"},
+    {id:"wake-up", word:"wake up", translation:"bangun tidur", sentence:"I usually {blank} at six in the morning.", level:"A1", kind:"phrasal"},
+    {id:"work-on", word:"work on", translation:"mengerjakan / memperbaiki", sentence:"She needs to {blank} her presentation skills.", level:"A2", kind:"phrasal"},
+    {id:"wrap-up", word:"wrap up", translation:"menyelesaikan / mengakhiri", sentence:"Let's {blank} this meeting in five minutes.", level:"A2", kind:"phrasal"},
+    {id:"follow-up", word:"follow up", translation:"menindaklanjuti", sentence:"I will {blank} with you next week about this.", level:"A2", kind:"phrasal"},
+    {id:"touch-base", word:"touch base", translation:"menghubungi sebentar untuk update", sentence:"Let's {blank} again after the meeting.", level:"B1", kind:"phrasal"},
+    {id:"circle-back", word:"circle back", translation:"kembali membahas nanti", sentence:"Can we {blank} to this topic tomorrow?", level:"B1", kind:"phrasal"},
+
+    // More formal / academic vocabulary.
+    {id:"significant", word:"significant", translation:"signifikan / penting", sentence:"There has been a {blank} increase in sales this quarter.", level:"A2", kind:"formal"},
+    {id:"substantial", word:"substantial", translation:"besar / substansial", sentence:"The company made a {blank} investment in new technology.", level:"B1", kind:"formal"},
+    {id:"consequently", word:"consequently", translation:"akibatnya", sentence:"The flight was delayed; {blank}, we missed our connection.", level:"B1", kind:"formal"},
+    {id:"approach", word:"approach", translation:"pendekatan", sentence:"We need a new {blank} to solve this issue.", level:"A2", kind:"formal"},
+    {id:"context", word:"context", translation:"konteks", sentence:"It's important to understand the {blank} before making a decision.", level:"A2", kind:"formal"},
+    {id:"impact", word:"impact", translation:"dampak", sentence:"The new policy will have a big {blank} on our operations.", level:"A2", kind:"formal"},
+    {id:"efficient", word:"efficient", translation:"efisien", sentence:"We are looking for a more {blank} way to manage inventory.", level:"A2", kind:"formal"},
+    {id:"sustainable", word:"sustainable", translation:"berkelanjutan", sentence:"The company aims for {blank} growth over the next decade.", level:"B1", kind:"formal"},
+    {id:"innovative", word:"innovative", translation:"inovatif", sentence:"Their {blank} approach impressed the investors.", level:"A2", kind:"formal"},
+    {id:"flexible", word:"flexible", translation:"fleksibel", sentence:"We offer {blank} working hours for our employees.", level:"A2", kind:"formal"},
+    {id:"diverse", word:"diverse", translation:"beragam", sentence:"Our team has a {blank} range of skills and backgrounds.", level:"A2", kind:"formal"},
+    {id:"controversial", word:"controversial", translation:"kontroversial", sentence:"The decision was quite {blank} among the staff.", level:"B1", kind:"formal"},
+    {id:"assume", word:"assume", translation:"menganggap / berasumsi", sentence:"Let's not {blank} anything until we have the facts.", level:"A2", kind:"formal"},
+    {id:"acknowledge", word:"acknowledge", translation:"mengakui", sentence:"I want to {blank} everyone's hard work on this project.", level:"B1", kind:"formal"},
+    {id:"adapt", word:"adapt", translation:"menyesuaikan diri", sentence:"Companies must {blank} quickly to survive in this market.", level:"A2", kind:"formal"},
+    {id:"analyze", word:"analyze", translation:"menganalisis", sentence:"We need to {blank} the data before making a decision.", level:"A2", kind:"formal"},
+    {id:"anticipate", word:"anticipate", translation:"mengantisipasi", sentence:"We {blank} some delays due to the weather.", level:"B1", kind:"formal"},
+    {id:"appreciate", word:"appreciate", translation:"menghargai", sentence:"I really {blank} your quick response.", level:"A2", kind:"formal"},
+    {id:"collaborate", word:"collaborate", translation:"berkolaborasi", sentence:"Our team will {blank} with the marketing department.", level:"A2", kind:"formal"},
+    {id:"communicate", word:"communicate", translation:"berkomunikasi", sentence:"It's important to {blank} clearly with your team.", level:"A2", kind:"formal"},
+    {id:"conclude", word:"conclude", translation:"menyimpulkan", sentence:"We can {blank} that the strategy was successful.", level:"A2", kind:"formal"},
+    {id:"confirm", word:"confirm", translation:"mengonfirmasi", sentence:"Please {blank} your attendance by Friday.", level:"A2", kind:"formal"},
+    {id:"consult", word:"consult", translation:"berkonsultasi", sentence:"You should {blank} a specialist before deciding.", level:"A2", kind:"formal"},
+    {id:"cooperate", word:"cooperate", translation:"bekerja sama", sentence:"Both departments agreed to {blank} on the project.", level:"A2", kind:"formal"},
+    {id:"coordinate", word:"coordinate", translation:"mengoordinasikan", sentence:"She will {blank} the event with all the vendors.", level:"B1", kind:"formal"},
+    {id:"demonstrate", word:"demonstrate", translation:"menunjukkan / mendemonstrasikan", sentence:"These results clearly {blank} an improvement.", level:"A2", kind:"formal"},
+    {id:"determine", word:"determine", translation:"menentukan", sentence:"We need more data to {blank} the cause of the problem.", level:"A2", kind:"formal"},
+    {id:"eliminate", word:"eliminate", translation:"menghilangkan", sentence:"This process will {blank} unnecessary paperwork.", level:"A2", kind:"formal"},
+    {id:"emphasize", word:"emphasize", translation:"menekankan", sentence:"The manager wanted to {blank} the importance of safety.", level:"B1", kind:"formal"},
+    {id:"encounter", word:"encounter", translation:"menghadapi / bertemu", sentence:"We may {blank} some challenges along the way.", level:"B1", kind:"formal"},
+    {id:"enhance", word:"enhance", translation:"meningkatkan", sentence:"This feature will {blank} the user experience.", level:"B1", kind:"formal"},
+    {id:"establish", word:"establish", translation:"mendirikan / menetapkan", sentence:"It takes time to {blank} a good reputation.", level:"A2", kind:"formal"},
+    {id:"evaluate", word:"evaluate", translation:"mengevaluasi", sentence:"We will {blank} the results at the end of the month.", level:"A2", kind:"formal"},
+    {id:"facilitate", word:"facilitate", translation:"memfasilitasi", sentence:"The app is designed to {blank} communication between teams.", level:"B1", kind:"formal"},
+    {id:"generate", word:"generate", translation:"menghasilkan", sentence:"The campaign helped {blank} more leads.", level:"A2", kind:"formal"},
+    {id:"identify", word:"identify", translation:"mengidentifikasi", sentence:"We need to {blank} the root cause of this issue.", level:"A2", kind:"formal"},
+    {id:"implement", word:"implement", translation:"menerapkan", sentence:"The company plans to {blank} the new policy next month.", level:"A2", kind:"formal"},
+    {id:"incorporate", word:"incorporate", translation:"menggabungkan / memasukkan", sentence:"We should {blank} customer feedback into the design.", level:"B1", kind:"formal"},
+    {id:"indicate", word:"indicate", translation:"menunjukkan", sentence:"These results clearly {blank} a positive trend.", level:"A2", kind:"formal"},
+    {id:"initiate", word:"initiate", translation:"memulai / menginisiasi", sentence:"The manager will {blank} the discussion tomorrow.", level:"B1", kind:"formal"},
+    {id:"interpret", word:"interpret", translation:"menafsirkan", sentence:"It's easy to {blank} this data incorrectly.", level:"B1", kind:"formal"},
+    {id:"maintain", word:"maintain", translation:"mempertahankan / memelihara", sentence:"We must {blank} good relationships with our clients.", level:"A2", kind:"formal"},
+    {id:"modify", word:"modify", translation:"mengubah / memodifikasi", sentence:"We had to {blank} our plan due to the budget cut.", level:"A2", kind:"formal"},
+    {id:"monitor", word:"monitor", translation:"memantau", sentence:"The team will {blank} the progress closely.", level:"A2", kind:"formal"},
+    {id:"obtain", word:"obtain", translation:"memperoleh", sentence:"You need to {blank} approval before proceeding.", level:"A2", kind:"formal"},
+    {id:"participate", word:"participate", translation:"berpartisipasi", sentence:"Everyone is encouraged to {blank} in the discussion.", level:"A2", kind:"formal"},
+    {id:"perceive", word:"perceive", translation:"menganggap / mempersepsikan", sentence:"Customers {blank} the brand as reliable.", level:"B1", kind:"formal"},
+    {id:"proceed", word:"proceed", translation:"melanjutkan", sentence:"Let's {blank} to the next agenda item.", level:"A2", kind:"formal"},
+    {id:"resolve", word:"resolve", translation:"menyelesaikan", sentence:"We need to {blank} this issue as soon as possible.", level:"A2", kind:"formal"},
+    {id:"utilize", word:"utilize", translation:"memanfaatkan", sentence:"We should {blank} our resources more effectively.", level:"B1", kind:"formal"},
+    {id:"verify", word:"verify", translation:"memverifikasi", sentence:"Please {blank} your email address to continue.", level:"A2", kind:"formal"},
+    {id:"sufficient", word:"sufficient", translation:"cukup", sentence:"We don't have {blank} time to finish this today.", level:"A2", kind:"formal"},
+    {id:"comprehensive", word:"comprehensive", translation:"menyeluruh / komprehensif", sentence:"The report provides a {blank} overview of the market.", level:"B1", kind:"formal"},
+    {id:"crucial", word:"crucial", translation:"sangat penting", sentence:"Timing is {blank} for the success of this launch.", level:"A2", kind:"formal"},
+    {id:"relevant", word:"relevant", translation:"relevan", sentence:"Please only include {blank} information in the summary.", level:"A2", kind:"formal"},
+    {id:"legitimate", word:"legitimate", translation:"sah / masuk akal", sentence:"That's a {blank} concern we should address.", level:"B1", kind:"formal"},
+    {id:"viable", word:"viable", translation:"layak dijalankan", sentence:"Is this business model still {blank} in the current market?", level:"B1", kind:"formal"},
+    {id:"in-accordance-with", word:"in accordance with", translation:"sesuai dengan", sentence:"All work must be done {blank} company policy.", level:"B2", kind:"formal"},
+    {id:"on-behalf-of", word:"on behalf of", translation:"atas nama", sentence:"I am writing this {blank} my manager, who is on leave.", level:"B1", kind:"formal"},
+    {id:"to-whom-it-may-concern", word:"to whom it may concern", translation:"kepada yth. / kepada siapa pun yang berkepentingan", sentence:"{blank}, I am writing to confirm my attendance.", level:"B1", kind:"formal"},
+    {id:"as-per", word:"as per", translation:"sesuai dengan", sentence:"{blank} our discussion yesterday, I have attached the file.", level:"B1", kind:"formal"},
+    {id:"for-your-information", word:"for your information", translation:"sebagai informasi", sentence:"{blank}, the meeting has been moved to 3 PM.", level:"A2", kind:"formal"},
+    {id:"in-the-meantime", word:"in the meantime", translation:"sementara itu", sentence:"{blank}, please continue with the current plan.", level:"A2", kind:"formal"},
+    {id:"on-a-regular-basis", word:"on a regular basis", translation:"secara rutin/berkala", sentence:"We review our budget {blank}.", level:"A2", kind:"formal"},
+    {id:"to-the-best-of-my-knowledge", word:"to the best of my knowledge", translation:"sepengetahuan saya", sentence:"{blank}, the report is accurate.", level:"B2", kind:"formal"},
+
+    // More gerunds.
+    {id:"planning-g", word:"planning", translation:"perencanaan", sentence:"Careful {blank} can prevent a lot of problems later.", level:"A2", kind:"gerund"},
+    {id:"budgeting-g", word:"budgeting", translation:"penyusunan anggaran", sentence:"Monthly {blank} helps you control your spending.", level:"A2", kind:"gerund"},
+    {id:"reporting-g", word:"reporting", translation:"pelaporan", sentence:"{blank} the results accurately is essential.", level:"A2", kind:"gerund"},
+    {id:"scheduling-g", word:"scheduling", translation:"penjadwalan", sentence:"{blank} meetings across time zones can be tricky.", level:"A2", kind:"gerund"},
+    {id:"presenting-g", word:"presenting", translation:"melakukan presentasi", sentence:"{blank} in front of a large audience makes her nervous.", level:"A2", kind:"gerund"},
+    {id:"interviewing-g", word:"interviewing", translation:"mewawancarai", sentence:"{blank} candidates takes a lot of preparation.", level:"B1", kind:"gerund"},
+    {id:"coaching-g", word:"coaching", translation:"melatih / membimbing", sentence:"{blank} new employees is part of her job.", level:"A2", kind:"gerund"},
+    {id:"mentoring-g", word:"mentoring", translation:"membimbing secara personal", sentence:"{blank} junior staff is very rewarding.", level:"B1", kind:"gerund"},
+    {id:"auditing-g", word:"auditing", translation:"melakukan audit", sentence:"{blank} the accounts takes several weeks every year.", level:"B1", kind:"gerund"},
+    {id:"consulting-g", word:"consulting", translation:"memberikan konsultasi", sentence:"{blank} for small businesses is her specialty.", level:"B1", kind:"gerund"},
+    {id:"advertising-g", word:"advertising", translation:"melakukan periklanan", sentence:"{blank} on social media reaches a wider audience.", level:"A2", kind:"gerund"},
+    {id:"manufacturing-g", word:"manufacturing", translation:"melakukan produksi/manufaktur", sentence:"{blank} at scale reduces the cost per unit.", level:"B1", kind:"gerund"},
+    {id:"shipping-g", word:"shipping", translation:"melakukan pengiriman", sentence:"{blank} internationally can be expensive.", level:"A2", kind:"gerund"},
+    {id:"investing-g", word:"investing", translation:"berinvestasi", sentence:"{blank} early gives your money more time to grow.", level:"B1", kind:"gerund"},
+    {id:"traveling-g", word:"traveling", translation:"bepergian", sentence:"{blank} for work is exciting but tiring.", level:"A1", kind:"gerund"},
+    {id:"parking-g", word:"parking", translation:"memarkir", sentence:"{blank} downtown is always difficult.", level:"A1", kind:"gerund"},
+    {id:"cooking-g", word:"cooking", translation:"memasak", sentence:"{blank} at home is usually healthier than eating out.", level:"A1", kind:"gerund"},
+    {id:"gardening-g", word:"gardening", translation:"berkebun", sentence:"{blank} is a relaxing hobby for many people.", level:"A1", kind:"gerund"},
+    {id:"recruiting-g", word:"recruiting", translation:"merekrut", sentence:"{blank} the right talent is a top priority this year.", level:"B1", kind:"gerund"},
+    {id:"onboarding-g", word:"onboarding", translation:"proses orientasi karyawan baru", sentence:"A good {blank} process helps new employees adapt quickly.", level:"B1", kind:"gerund"},
+
+    // More casual / conversational expressions.
+    {id:"no-big-deal", word:"no big deal", translation:"bukan masalah besar", sentence:"Don't worry, it's {blank}.", level:"A2", kind:"casual"},
+    {id:"my-bad", word:"my bad", translation:"salahku", sentence:"{blank}, I forgot to send the file.", level:"A2", kind:"casual"},
+    {id:"sounds-good", word:"sounds good", translation:"kedengarannya bagus/oke", sentence:"Let's meet at 3 PM. {blank}?", level:"A1", kind:"casual"},
+    {id:"take-your-time", word:"take your time", translation:"santai saja, tidak usah buru-buru", sentence:"{blank}, there's no rush.", level:"A2", kind:"casual"},
+    {id:"hang-in-there", word:"hang in there", translation:"tetap semangat / bertahanlah", sentence:"{blank}, things will get better soon.", level:"B1", kind:"casual"},
+    {id:"same-here", word:"same here", translation:"sama, aku juga", sentence:"\"I'm exhausted.\" \"{blank}.\"", level:"A1", kind:"casual"},
+    {id:"for-real", word:"for real", translation:"beneran / serius", sentence:"Are you {blank} moving to Jakarta next month?", level:"A2", kind:"casual"},
+    {id:"long-story-short", word:"long story short", translation:"singkat cerita", sentence:"{blank}, we missed the flight.", level:"B1", kind:"casual"},
+    {id:"just-in-case", word:"just in case", translation:"untuk berjaga-jaga", sentence:"Bring an umbrella {blank} it rains.", level:"A2", kind:"casual"},
+    {id:"as-far-as-i-know", word:"as far as I know", translation:"setahu saya", sentence:"{blank}, the office is closed on Sundays.", level:"A2", kind:"casual"},
+    {id:"you-bet", word:"you bet", translation:"tentu saja / pasti", sentence:"\"Will you come to the party?\" \"{blank}!\"", level:"B1", kind:"casual"},
+    {id:"not-really", word:"not really", translation:"tidak juga / enggak juga", sentence:"\"Are you angry?\" \"{blank}, just tired.\"", level:"A1", kind:"casual"},
+    {id:"what-a-relief", word:"what a relief", translation:"lega rasanya", sentence:"{blank}! I thought I lost my wallet.", level:"A2", kind:"casual"},
+    {id:"keep-it-up", word:"keep it up", translation:"pertahankan / terus semangat", sentence:"Great job on the project, {blank}!", level:"A2", kind:"casual"},
+    {id:"you-are-welcome", word:"you're welcome", translation:"sama-sama", sentence:"\"Thank you so much!\" \"{blank}.\"", level:"A1", kind:"casual"},
+    {id:"i-see", word:"I see", translation:"oh begitu / aku paham", sentence:"\"The meeting was moved to Monday.\" \"{blank}.\"", level:"A1", kind:"casual"},
+    {id:"never-mind", word:"never mind", translation:"sudahlah / lupakan saja", sentence:"{blank}, it wasn't important anyway.", level:"A1", kind:"casual"},
+    {id:"good-point", word:"good point", translation:"poin yang bagus", sentence:"That's a {blank}, I hadn't thought of that.", level:"A2", kind:"casual"},
+    {id:"fingers-crossed", word:"fingers crossed", translation:"semoga berhasil", sentence:"{blank} for tomorrow's interview!", level:"B1", kind:"casual"},
+    {id:"no-worries", word:"no worries", translation:"tidak masalah / santai saja", sentence:"\"Sorry I'm late!\" \"{blank}, we just started.\"", level:"A1", kind:"casual"},
+
+    // Idioms.
+    {id:"break-the-ice", word:"break the ice", translation:"mencairkan suasana", sentence:"He told a joke to {blank} at the meeting.", level:"B1", kind:"idiom"},
+    {id:"hit-the-books", word:"hit the books", translation:"belajar dengan giat", sentence:"I need to {blank} before the exam tomorrow.", level:"B1", kind:"idiom"},
+    {id:"under-the-weather", word:"under the weather", translation:"kurang sehat", sentence:"I'm feeling a bit {blank} today.", level:"B1", kind:"idiom"},
+    {id:"once-in-a-blue-moon", word:"once in a blue moon", translation:"sangat jarang terjadi", sentence:"We only meet {blank} these days.", level:"B2", kind:"idiom"},
+    {id:"piece-of-cake", word:"piece of cake", translation:"gampang sekali", sentence:"Don't worry, this test will be a {blank}.", level:"A2", kind:"idiom"},
+    {id:"cost-an-arm-and-a-leg", word:"cost an arm and a leg", translation:"sangat mahal", sentence:"That new phone must have {blank}.", level:"B1", kind:"idiom"},
+    {id:"let-the-cat-out-of-the-bag", word:"let the cat out of the bag", translation:"membocorkan rahasia", sentence:"Please don't {blank} about the surprise party.", level:"B2", kind:"idiom"},
+    {id:"the-ball-is-in-your-court", word:"the ball is in your court", translation:"sekarang giliranmu untuk bertindak", sentence:"I've done my part; now {blank}.", level:"B2", kind:"idiom"},
+    {id:"on-the-same-page", word:"on the same page", translation:"memiliki pemahaman yang sama", sentence:"Let's make sure everyone is {blank} before we start.", level:"B1", kind:"idiom"},
+    {id:"back-to-square-one", word:"back to square one", translation:"kembali ke titik awal", sentence:"The deal fell through, so we're {blank}.", level:"B1", kind:"idiom"},
+    {id:"call-it-a-day", word:"call it a day", translation:"mengakhiri kegiatan untuk hari ini", sentence:"We've worked hard, let's {blank}.", level:"A2", kind:"idiom"},
+    {id:"cut-corners", word:"cut corners", translation:"mengambil jalan pintas (mengurangi kualitas)", sentence:"Don't {blank} on safety just to save money.", level:"B1", kind:"idiom"},
+    {id:"go-the-extra-mile", word:"go the extra mile", translation:"berusaha lebih dari yang diharapkan", sentence:"She always tries to {blank} for her clients.", level:"B1", kind:"idiom"},
+    {id:"hit-the-nail-on-the-head", word:"hit the nail on the head", translation:"tepat sasaran / benar sekali", sentence:"You really {blank} with that comment.", level:"B2", kind:"idiom"},
+    {id:"in-the-loop", word:"in the loop", translation:"mendapat informasi terbaru", sentence:"Please keep me {blank} on any updates.", level:"B1", kind:"idiom"},
+    {id:"keep-an-eye-on", word:"keep an eye on", translation:"mengawasi", sentence:"Can you {blank} my bag for a minute?", level:"A2", kind:"idiom"},
+    {id:"learn-the-ropes", word:"learn the ropes", translation:"mempelajari dasar-dasar pekerjaan baru", sentence:"It took her a few weeks to {blank}.", level:"B1", kind:"idiom"},
+    {id:"make-ends-meet", word:"make ends meet", translation:"memenuhi kebutuhan hidup", sentence:"It's hard to {blank} with rising prices.", level:"B1", kind:"idiom"},
+    {id:"on-the-fence", word:"on the fence", translation:"belum memutuskan / ragu-ragu", sentence:"I'm still {blank} about accepting the offer.", level:"B1", kind:"idiom"},
+    {id:"out-of-the-blue", word:"out of the blue", translation:"tiba-tiba / tanpa diduga", sentence:"He called me {blank} after years of silence.", level:"B1", kind:"idiom"},
+    {id:"see-eye-to-eye", word:"see eye to eye", translation:"sependapat", sentence:"We don't always {blank} on politics.", level:"B2", kind:"idiom"},
+    {id:"take-it-with-a-grain-of-salt", word:"take it with a grain of salt", translation:"jangan terlalu percaya begitu saja", sentence:"You should {blank} what he says.", level:"B2", kind:"idiom"},
+    {id:"think-outside-the-box", word:"think outside the box", translation:"berpikir kreatif / di luar kebiasaan", sentence:"We need to {blank} to solve this problem.", level:"B1", kind:"idiom"},
+    {id:"time-flies", word:"time flies", translation:"waktu berlalu begitu cepat", sentence:"{blank} when you're having fun.", level:"A2", kind:"idiom"},
+    {id:"up-in-the-air", word:"up in the air", translation:"belum pasti", sentence:"Our vacation plans are still {blank}.", level:"B1", kind:"idiom"},
+
+    // Even more phrasal verbs (batch 2).
+    {id:"break-up", word:"break up", translation:"putus (hubungan) / membubarkan", sentence:"They decided to {blank} after years together.", level:"A2", kind:"phrasal"},
+    {id:"bring-about", word:"bring about", translation:"menyebabkan / mewujudkan", sentence:"New technology can {blank} major changes in society.", level:"B1", kind:"phrasal"},
+    {id:"call-off", word:"call off", translation:"membatalkan", sentence:"They had to {blank} the meeting due to bad weather.", level:"A2", kind:"phrasal"},
+    {id:"call-back", word:"call back", translation:"menelepon balik", sentence:"I'll {blank} you as soon as I'm free.", level:"A1", kind:"phrasal"},
+    {id:"carry-out", word:"carry out", translation:"melaksanakan", sentence:"The team will {blank} the plan next week.", level:"A2", kind:"phrasal"},
+    {id:"come-down-with", word:"come down with", translation:"jatuh sakit (biasanya ringan)", sentence:"I think I'm coming down with a cold.", level:"A2", kind:"phrasal"},
+    {id:"dress-up", word:"dress up", translation:"berdandan / berpakaian rapi", sentence:"We need to {blank} for the wedding tonight.", level:"A1", kind:"phrasal"},
+    {id:"drop-in", word:"drop in", translation:"mampir sebentar", sentence:"Feel free to {blank} whenever you're in the area.", level:"A2", kind:"phrasal"},
+    {id:"eat-out", word:"eat out", translation:"makan di luar (restoran)", sentence:"Let's {blank} tonight instead of cooking.", level:"A1", kind:"phrasal"},
+    {id:"fall-behind", word:"fall behind", translation:"tertinggal", sentence:"If you skip classes, you might {blank} in your studies.", level:"A2", kind:"phrasal"},
+    {id:"get-ahead", word:"get ahead", translation:"maju / unggul", sentence:"Hard work helps you {blank} in your career.", level:"A2", kind:"phrasal"},
+    {id:"get-off", word:"get off", translation:"turun (dari kendaraan)", sentence:"We need to {blank} at the next station.", level:"A1", kind:"phrasal"},
+    {id:"get-on", word:"get on", translation:"naik (kendaraan) / akur", sentence:"We need to {blank} the bus before it leaves.", level:"A1", kind:"phrasal"},
+    {id:"get-together", word:"get together", translation:"berkumpul", sentence:"Let's {blank} this weekend to catch up.", level:"A2", kind:"phrasal"},
+    {id:"give-out", word:"give out", translation:"membagikan", sentence:"Volunteers will {blank} free food at the event.", level:"A2", kind:"phrasal"},
+    {id:"go-off", word:"go off", translation:"berbunyi (alarm) / meledak", sentence:"My alarm didn't {blank} this morning.", level:"A2", kind:"phrasal"},
+    {id:"grow-up", word:"grow up", translation:"tumbuh dewasa", sentence:"She {blank} in a small town near the coast.", level:"A1", kind:"phrasal"},
+    {id:"hang-up", word:"hang up", translation:"menutup telepon", sentence:"Please don't {blank}, I have one more question.", level:"A1", kind:"phrasal"},
+    {id:"keep-going", word:"keep going", translation:"terus melanjutkan", sentence:"Even when it's hard, you have to {blank}.", level:"A2", kind:"phrasal"},
+    {id:"lay-off", word:"lay off", translation:"memberhentikan (karyawan)", sentence:"The company had to {blank} several employees.", level:"B1", kind:"phrasal"},
+    {id:"look-out-for", word:"look out for", translation:"mewaspadai", sentence:"{blank} scams when shopping online.", level:"A2", kind:"phrasal"},
+    {id:"mix-up", word:"mix up", translation:"tertukar / membingungkan", sentence:"Sorry, I think there's been a {blank} with our orders.", level:"A2", kind:"phrasal"},
+    {id:"pass-out", word:"pass out", translation:"pingsan", sentence:"He felt dizzy and almost {blank} in the heat.", level:"B1", kind:"phrasal"},
+    {id:"pay-off", word:"pay off", translation:"melunasi / membuahkan hasil", sentence:"Years of hard work finally started to {blank}.", level:"B1", kind:"phrasal"},
+    {id:"put-up-with", word:"put up with", translation:"menoleransi / bersabar dengan", sentence:"I don't know how she can {blank} such a noisy office.", level:"B1", kind:"phrasal"},
+    {id:"save-up", word:"save up", translation:"menabung", sentence:"We're trying to {blank} for a new house.", level:"A1", kind:"phrasal"},
+    {id:"set-out", word:"set out", translation:"memulai (perjalanan/rencana)", sentence:"They plan to {blank} early to avoid the traffic.", level:"A2", kind:"phrasal"},
+    {id:"shut-down", word:"shut down", translation:"menutup / mematikan", sentence:"The factory had to {blank} for maintenance.", level:"A2", kind:"phrasal"},
+    {id:"stand-by", word:"stand by", translation:"bersiap siaga / mendukung", sentence:"Please {blank} for further instructions.", level:"A2", kind:"phrasal"},
+    {id:"start-over", word:"start over", translation:"memulai dari awal", sentence:"The project failed, so we had to {blank}.", level:"A2", kind:"phrasal"},
+    {id:"step-down", word:"step down", translation:"mengundurkan diri (dari jabatan)", sentence:"The CEO decided to {blank} after ten years.", level:"B1", kind:"phrasal"},
+    {id:"take-on", word:"take on", translation:"menerima (tugas/tanggung jawab)", sentence:"She agreed to {blank} the new project.", level:"A2", kind:"phrasal"},
+    {id:"tear-down", word:"tear down", translation:"merobohkan", sentence:"They plan to {blank} the old building next year.", level:"B1", kind:"phrasal"},
+    {id:"tidy-up", word:"tidy up", translation:"merapikan", sentence:"Can you {blank} your desk before the meeting?", level:"A1", kind:"phrasal"},
+    {id:"warm-up", word:"warm up", translation:"pemanasan (sebelum olahraga) / menghangatkan", sentence:"Always {blank} before you exercise.", level:"A1", kind:"phrasal"},
+    {id:"write-down", word:"write down", translation:"menuliskan", sentence:"Please {blank} your ideas before the discussion.", level:"A1", kind:"phrasal"},
+
+    // Even more formal / academic vocabulary (batch 2).
+    {id:"allocate", word:"allocate", translation:"mengalokasikan", sentence:"We need to {blank} more budget to marketing.", level:"B1", kind:"formal"},
+    {id:"align", word:"align", translation:"menyelaraskan", sentence:"Our goals should {blank} with the company's mission.", level:"B1", kind:"formal"},
+    {id:"articulate", word:"articulate", translation:"mengungkapkan dengan jelas", sentence:"She was able to {blank} her concerns clearly.", level:"B2", kind:"formal"},
+    {id:"assess", word:"assess", translation:"menilai", sentence:"We need to {blank} the risks before proceeding.", level:"A2", kind:"formal"},
+    {id:"attain", word:"attain", translation:"mencapai", sentence:"It took years to {blank} this level of success.", level:"B1", kind:"formal"},
+    {id:"authorize", word:"authorize", translation:"memberi wewenang / mengizinkan", sentence:"Only the manager can {blank} this expense.", level:"B1", kind:"formal"},
+    {id:"capacity", word:"capacity", translation:"kapasitas", sentence:"The venue has a {blank} of five hundred people.", level:"A2", kind:"formal"},
+    {id:"circumstance", word:"circumstance", translation:"keadaan / situasi", sentence:"Under normal {blank}s, this wouldn't be a problem.", level:"B1", kind:"formal"},
+    {id:"comprise", word:"comprise", translation:"terdiri dari", sentence:"The committee will {blank} five members.", level:"B2", kind:"formal"},
+    {id:"contribute", word:"contribute", translation:"berkontribusi", sentence:"Everyone is expected to {blank} to the discussion.", level:"A2", kind:"formal"},
+    {id:"convene", word:"convene", translation:"mengadakan rapat", sentence:"The board will {blank} next Monday.", level:"B2", kind:"formal"},
+    {id:"correspond", word:"correspond", translation:"berkorespondensi / sesuai dengan", sentence:"The results {blank} with our earlier predictions.", level:"B1", kind:"formal"},
+    {id:"define", word:"define", translation:"mendefinisikan", sentence:"Let's {blank} our goals before we start.", level:"A2", kind:"formal"},
+    {id:"delegate", word:"delegate", translation:"mendelegasikan", sentence:"A good manager knows when to {blank} tasks.", level:"A2", kind:"formal"},
+    {id:"derive", word:"derive", translation:"berasal dari / memperoleh", sentence:"We {blank} great value from this partnership.", level:"B1", kind:"formal"},
+    {id:"differentiate", word:"differentiate", translation:"membedakan", sentence:"It's important to {blank} between fact and opinion.", level:"B1", kind:"formal"},
+    {id:"diminish", word:"diminish", translation:"mengurangi / berkurang", sentence:"Their enthusiasm began to {blank} after the setback.", level:"B1", kind:"formal"},
+    {id:"disclose", word:"disclose", translation:"mengungkapkan informasi", sentence:"The company must {blank} any conflicts of interest.", level:"B2", kind:"formal"},
+    {id:"dispute", word:"dispute", translation:"sengketa / membantah", sentence:"They couldn't {blank} the evidence presented.", level:"B1", kind:"formal"},
+    {id:"distinguish", word:"distinguish", translation:"membedakan", sentence:"It's hard to {blank} the two products by appearance alone.", level:"B1", kind:"formal"},
+    {id:"elaborate", word:"elaborate on", translation:"menjelaskan lebih rinci", sentence:"Could you {blank} on that point, please?", level:"B1", kind:"formal"},
+    {id:"embrace", word:"embrace", translation:"merangkul / menerima perubahan", sentence:"The team decided to {blank} the new technology.", level:"B1", kind:"formal"},
+    {id:"endorse", word:"endorse", translation:"mendukung / merekomendasikan", sentence:"The manager was happy to {blank} the proposal.", level:"B1", kind:"formal"},
+    {id:"ensure", word:"ensure", translation:"memastikan", sentence:"Please {blank} all documents are signed before Friday.", level:"A2", kind:"formal"},
+    {id:"exceed", word:"exceed", translation:"melebihi", sentence:"Sales this month {blank} our expectations.", level:"A2", kind:"formal"},
+    {id:"exhibit", word:"exhibit", translation:"menunjukkan / memamerkan", sentence:"The data {blank} a clear upward trend.", level:"B1", kind:"formal"},
+    {id:"expand", word:"expand", translation:"memperluas", sentence:"The company plans to {blank} into new markets.", level:"A2", kind:"formal"},
+    {id:"expedite", word:"expedite", translation:"mempercepat proses", sentence:"We asked the courier to {blank} the delivery.", level:"B2", kind:"formal"},
+    {id:"formulate", word:"formulate", translation:"merumuskan", sentence:"The team worked together to {blank} a new strategy.", level:"B1", kind:"formal"},
+    {id:"highlight", word:"highlight", translation:"menyoroti", sentence:"The report {blank} several key issues.", level:"A2", kind:"formal"},
+    {id:"illustrate", word:"illustrate", translation:"menggambarkan / mengilustrasikan", sentence:"This example helps {blank} the main point.", level:"B1", kind:"formal"},
+    {id:"impose", word:"impose", translation:"menerapkan aturan / memaksakan", sentence:"The government decided to {blank} new regulations.", level:"B1", kind:"formal"},
+    {id:"integrate", word:"integrate", translation:"mengintegrasikan", sentence:"We need to {blank} the new system with our existing tools.", level:"B1", kind:"formal"},
+    {id:"intervene", word:"intervene", translation:"campur tangan", sentence:"The manager had to {blank} to resolve the conflict.", level:"B2", kind:"formal"},
+    {id:"justify", word:"justify", translation:"membenarkan / menjustifikasi", sentence:"Can you {blank} this expense to the finance team?", level:"B1", kind:"formal"},
+    {id:"leverage", word:"leverage", translation:"memanfaatkan secara strategis", sentence:"We should {blank} our existing network to find clients.", level:"B2", kind:"formal"},
+    {id:"negotiate", word:"negotiate", translation:"bernegosiasi", sentence:"They managed to {blank} a better price.", level:"A2", kind:"formal"},
+    {id:"outline", word:"outline", translation:"menguraikan garis besar", sentence:"Let me {blank} the plan for next quarter.", level:"A2", kind:"formal"},
+    {id:"overcome", word:"overcome", translation:"mengatasi", sentence:"It took courage to {blank} such a huge challenge.", level:"A2", kind:"formal"},
+    {id:"oversee", word:"oversee", translation:"mengawasi", sentence:"She was chosen to {blank} the entire project.", level:"B1", kind:"formal"},
+    {id:"pursue", word:"pursue", translation:"mengejar tujuan", sentence:"He decided to {blank} a career in engineering.", level:"A2", kind:"formal"},
+    {id:"reinforce", word:"reinforce", translation:"memperkuat", sentence:"This training will {blank} what you already know.", level:"B1", kind:"formal"},
+    {id:"reject", word:"reject", translation:"menolak", sentence:"The committee decided to {blank} the proposal.", level:"A2", kind:"formal"},
+    {id:"rely", word:"rely on", translation:"bergantung pada", sentence:"We {blank} heavily on customer feedback.", level:"A2", kind:"formal"},
+    {id:"retain", word:"retain", translation:"mempertahankan", sentence:"The company wants to {blank} its best employees.", level:"B1", kind:"formal"},
+    {id:"revise", word:"revise", translation:"merevisi", sentence:"Please {blank} the document before submitting it.", level:"A2", kind:"formal"},
+    {id:"streamline", word:"streamline", translation:"menyederhanakan proses", sentence:"We aim to {blank} the approval process.", level:"B2", kind:"formal"},
+    {id:"sustain", word:"sustain", translation:"mempertahankan / menopang", sentence:"It's hard to {blank} this pace for a whole year.", level:"B1", kind:"formal"},
+    {id:"transform", word:"transform", translation:"mengubah / bertransformasi", sentence:"Digital tools can {blank} the way we work.", level:"A2", kind:"formal"},
+    {id:"undertake", word:"undertake", translation:"melakukan / mengambil tugas", sentence:"The team agreed to {blank} the new initiative.", level:"B2", kind:"formal"},
+    {id:"validate", word:"validate", translation:"memvalidasi", sentence:"We need to {blank} these results before publishing.", level:"B1", kind:"formal"},
+    {id:"in-light-of", word:"in light of", translation:"mengingat / berdasarkan", sentence:"{blank} the recent changes, we need to update our strategy.", level:"B2", kind:"formal"},
+    {id:"with-regard-to", word:"with regard to", translation:"terkait dengan", sentence:"{blank} your request, we will respond within three days.", level:"B1", kind:"formal"},
+    {id:"for-the-time-being", word:"for the time being", translation:"untuk sementara waktu", sentence:"{blank}, please use the old system.", level:"B1", kind:"formal"},
+    {id:"on-short-notice", word:"on short notice", translation:"dengan pemberitahuan singkat", sentence:"Thank you for coming {blank}.", level:"B1", kind:"formal"},
+    {id:"subject-to-change", word:"subject to change", translation:"dapat berubah sewaktu-waktu", sentence:"Please note that the schedule is {blank}.", level:"B1", kind:"formal"},
+    {id:"as-soon-as-possible", word:"as soon as possible", translation:"sesegera mungkin", sentence:"Please send the report {blank}.", level:"A2", kind:"formal"},
+    {id:"in-response-to", word:"in response to", translation:"sebagai tanggapan atas", sentence:"{blank} your email, I have attached the file.", level:"B1", kind:"formal"},
+    {id:"for-instance", word:"for instance", translation:"sebagai contoh", sentence:"Some fruits, {blank} apples and bananas, are rich in fiber.", level:"A2", kind:"formal"},
+
+    // Even more gerunds (batch 2).
+    {id:"forecasting-g", word:"forecasting", translation:"melakukan perkiraan/proyeksi", sentence:"Accurate {blank} helps the company plan its budget.", level:"B1", kind:"gerund"},
+    {id:"drafting-g", word:"drafting", translation:"menyusun draf", sentence:"{blank} the contract took two days.", level:"B1", kind:"gerund"},
+    {id:"filing-g", word:"filing", translation:"mengarsipkan / mengajukan dokumen", sentence:"{blank} your taxes on time avoids penalties.", level:"A2", kind:"gerund"},
+    {id:"archiving-g", word:"archiving", translation:"mengarsipkan", sentence:"{blank} old records frees up storage space.", level:"A2", kind:"gerund"},
+    {id:"renovating-g", word:"renovating", translation:"merenovasi", sentence:"{blank} the office took longer than expected.", level:"A2", kind:"gerund"},
+    {id:"relocating-g", word:"relocating", translation:"berpindah lokasi", sentence:"{blank} to a new city can be stressful.", level:"A2", kind:"gerund"},
+    {id:"downsizing-g", word:"downsizing", translation:"mengurangi jumlah karyawan/skala", sentence:"{blank} the department was a difficult decision.", level:"B1", kind:"gerund"},
+    {id:"rebranding-g", word:"rebranding", translation:"mengubah citra merek", sentence:"{blank} helped the company attract younger customers.", level:"B1", kind:"gerund"},
+    {id:"freelancing-g", word:"freelancing", translation:"bekerja lepas", sentence:"{blank} gives you more flexibility over your schedule.", level:"A2", kind:"gerund"},
+    {id:"volunteering-g", word:"volunteering", translation:"menjadi relawan", sentence:"{blank} at the shelter was a rewarding experience.", level:"A1", kind:"gerund"},
+    {id:"fundraising-g", word:"fundraising", translation:"menggalang dana", sentence:"{blank} for the event started last month.", level:"A2", kind:"gerund"},
+    {id:"sightseeing-g", word:"sightseeing", translation:"melihat-lihat tempat wisata", sentence:"{blank} is our main plan for the holiday.", level:"A1", kind:"gerund"},
+    {id:"bargaining-g", word:"bargaining", translation:"tawar-menawar", sentence:"{blank} at the market can save you a lot of money.", level:"A2", kind:"gerund"},
+    {id:"babysitting-g", word:"babysitting", translation:"menjaga anak sementara", sentence:"{blank} on weekends helps her earn extra money.", level:"A1", kind:"gerund"},
+    {id:"prospecting-g", word:"prospecting", translation:"mencari calon pelanggan/peluang", sentence:"{blank} for new clients is a big part of sales work.", level:"B1", kind:"gerund"},
+
+    // Even more casual expressions (batch 2).
+    {id:"hit-me-up", word:"hit me up", translation:"hubungi aku", sentence:"{blank} if you need anything.", level:"A2", kind:"casual"},
+    {id:"i-am-down", word:"I'm down", translation:"aku ikut / setuju", sentence:"\"Want to grab lunch?\" \"{blank}.\"", level:"A2", kind:"casual"},
+    {id:"no-kidding", word:"no kidding", translation:"yang benar saja / masa sih", sentence:"\"He quit his job.\" \"{blank}? Why?\"", level:"A2", kind:"casual"},
+    {id:"give-me-a-second", word:"give me a second", translation:"tunggu sebentar", sentence:"{blank}, I'm almost done.", level:"A1", kind:"casual"},
+    {id:"that-makes-two-of-us", word:"that makes two of us", translation:"aku juga (senasib)", sentence:"\"I hate Mondays.\" \"{blank}.\"", level:"B1", kind:"casual"},
+    {id:"i-cant-complain", word:"I can't complain", translation:"tidak ada yang bisa dikeluhkan", sentence:"\"How's work?\" \"{blank}.\"", level:"A2", kind:"casual"},
+    {id:"whats-up", word:"what's up", translation:"apa kabar / ada apa", sentence:"\"{blank}?\" \"Nothing much.\"", level:"A1", kind:"casual"},
+    {id:"catch-you-later", word:"catch you later", translation:"sampai jumpa lagi", sentence:"I have to go now, {blank}!", level:"A1", kind:"casual"},
+    {id:"speak-of-the-devil", word:"speak of the devil", translation:"baru saja dibicarakan (orangnya muncul)", sentence:"{blank}, here he comes now.", level:"B1", kind:"casual"},
+    {id:"word-has-it", word:"word has it", translation:"kabarnya / kata orang-orang", sentence:"{blank} that the company is hiring again.", level:"B1", kind:"casual"},
+    {id:"easier-said-than-done", word:"easier said than done", translation:"lebih mudah diucapkan daripada dilakukan", sentence:"Losing weight sounds simple, but it's {blank}.", level:"B1", kind:"casual"},
+    {id:"its-up-to-you", word:"it's up to you", translation:"terserah kamu", sentence:"We can go either way, {blank}.", level:"A2", kind:"casual"},
+    {id:"no-doubt-about-it", word:"no doubt about it", translation:"tidak diragukan lagi", sentence:"{blank}, she's the best candidate for the job.", level:"A2", kind:"casual"},
+    {id:"lets-face-it", word:"let's face it", translation:"mari kita akui", sentence:"{blank}, the plan didn't work.", level:"B1", kind:"casual"},
+    {id:"dont-mention-it", word:"don't mention it", translation:"tidak usah dipikirkan / sama-sama", sentence:"\"Thank you!\" \"{blank}.\"", level:"A1", kind:"casual"},
+
+    // Even more idioms (batch 2).
+    {id:"bite-the-bullet", word:"bite the bullet", translation:"menghadapi sesuatu yang sulit dengan berani", sentence:"We just have to {blank} and finish this project.", level:"B1", kind:"idiom"},
+    {id:"burn-the-midnight-oil", word:"burn the midnight oil", translation:"begadang untuk bekerja/belajar", sentence:"She had to {blank} to finish the report.", level:"B2", kind:"idiom"},
+    {id:"cut-to-the-chase", word:"cut to the chase", translation:"langsung ke intinya", sentence:"Let's {blank}: are you accepting the offer or not?", level:"B1", kind:"idiom"},
+    {id:"get-the-ball-rolling", word:"get the ball rolling", translation:"memulai sesuatu", sentence:"Let's {blank} on this project today.", level:"B1", kind:"idiom"},
+    {id:"hit-the-ground-running", word:"hit the ground running", translation:"langsung bekerja dengan cepat dan efektif", sentence:"The new employee managed to {blank} from day one.", level:"B2", kind:"idiom"},
+    {id:"in-the-nick-of-time", word:"in the nick of time", translation:"tepat pada waktunya (nyaris terlambat)", sentence:"We arrived at the airport {blank}.", level:"B2", kind:"idiom"},
+    {id:"jump-on-the-bandwagon", word:"jump on the bandwagon", translation:"ikut-ikutan tren", sentence:"Many companies want to {blank} now that AI is popular.", level:"B1", kind:"idiom"},
+    {id:"keep-your-chin-up", word:"keep your chin up", translation:"tetap semangat", sentence:"{blank}, things will improve soon.", level:"A2", kind:"idiom"},
+    {id:"let-sleeping-dogs-lie", word:"let sleeping dogs lie", translation:"jangan mengungkit masalah lama", sentence:"Maybe we should just {blank} and move forward.", level:"B2", kind:"idiom"},
+    {id:"miss-the-boat", word:"miss the boat", translation:"melewatkan kesempatan", sentence:"If you don't apply now, you might {blank}.", level:"B1", kind:"idiom"},
+    {id:"off-the-top-of-my-head", word:"off the top of my head", translation:"tanpa berpikir panjang / spontan", sentence:"{blank}, I'd say we need about three weeks.", level:"B1", kind:"idiom"},
+    {id:"on-thin-ice", word:"on thin ice", translation:"dalam situasi berisiko", sentence:"After the last mistake, he's {blank} with his boss.", level:"B1", kind:"idiom"},
+    {id:"pull-strings", word:"pull strings", translation:"menggunakan koneksi/pengaruh", sentence:"He had to {blank} to get the permit approved quickly.", level:"B2", kind:"idiom"},
+    {id:"take-a-rain-check", word:"take a rain check", translation:"menunda undangan untuk lain waktu", sentence:"Can I {blank} on dinner tonight? I'm too tired.", level:"B1", kind:"idiom"},
+    {id:"read-between-the-lines", word:"read between the lines", translation:"memahami makna tersirat", sentence:"You need to {blank} to understand what she really meant.", level:"B2", kind:"idiom"},
+    {id:"spill-the-beans", word:"spill the beans", translation:"membocorkan rahasia", sentence:"Don't {blank} about the surprise party.", level:"B1", kind:"idiom"},
+    {id:"the-tip-of-the-iceberg", word:"the tip of the iceberg", translation:"baru sebagian kecil dari masalah", sentence:"These complaints are just {blank}.", level:"B2", kind:"idiom"},
+    {id:"throw-in-the-towel", word:"throw in the towel", translation:"menyerah", sentence:"After months of trying, they decided to {blank}.", level:"B1", kind:"idiom"},
+    {id:"in-the-same-boat", word:"in the same boat", translation:"mengalami situasi yang sama", sentence:"Don't worry, we're all {blank} here.", level:"A2", kind:"idiom"},
+    {id:"beat-around-the-bush", word:"beat around the bush", translation:"berbicara berbelit-belit", sentence:"Stop {blank} and tell me what happened.", level:"B1", kind:"idiom"},
+
+    // Topical everyday vocabulary: Technology & internet.
+    {id:"password", word:"password", translation:"kata sandi", sentence:"Never share your {blank} with anyone.", level:"A1", kind:"topical"},
+    {id:"download", word:"download", translation:"mengunduh", sentence:"You can {blank} the file from our website.", level:"A1", kind:"topical"},
+    {id:"upload", word:"upload", translation:"mengunggah", sentence:"Please {blank} your documents before the deadline.", level:"A2", kind:"topical"},
+    {id:"install", word:"install", translation:"memasang aplikasi", sentence:"You need to {blank} this app to continue.", level:"A1", kind:"topical"},
+    {id:"device", word:"device", translation:"perangkat", sentence:"This app works on any {blank} with internet access.", level:"A1", kind:"topical"},
+    {id:"browser", word:"browser", translation:"peramban", sentence:"Which {blank} do you use, Chrome or Safari?", level:"A1", kind:"topical"},
+    {id:"wireless", word:"wireless", translation:"nirkabel", sentence:"The office has {blank} internet throughout the building.", level:"A2", kind:"topical"},
+    {id:"storage", word:"storage", translation:"penyimpanan", sentence:"I need more {blank} for my photos.", level:"A2", kind:"topical"},
+    {id:"software", word:"software", translation:"perangkat lunak", sentence:"We use accounting {blank} to track expenses.", level:"A2", kind:"topical"},
+    {id:"hardware", word:"hardware", translation:"perangkat keras", sentence:"The {blank} needs to be upgraded for better performance.", level:"A2", kind:"topical"},
+    {id:"application", word:"application", translation:"aplikasi", sentence:"There's an {blank} for almost everything these days.", level:"A1", kind:"topical"},
+    {id:"network", word:"network", translation:"jaringan", sentence:"The {blank} has been down since this morning.", level:"A2", kind:"topical"},
+    {id:"server", word:"server", translation:"server", sentence:"The {blank} crashed during the update.", level:"A2", kind:"topical"},
+    {id:"bandwidth", word:"bandwidth", translation:"bandwidth / lebar pita", sentence:"Video calls use a lot of {blank}.", level:"B1", kind:"topical"},
+    {id:"notification", word:"notification", translation:"notifikasi", sentence:"I get a {blank} every time someone comments.", level:"A1", kind:"topical"},
+    {id:"subscription", word:"subscription", translation:"langganan", sentence:"I canceled my {blank} to save money.", level:"A2", kind:"topical"},
+    {id:"interface", word:"interface", translation:"antarmuka", sentence:"The new {blank} is much easier to use.", level:"B1", kind:"topical"},
+    {id:"database", word:"database", translation:"basis data", sentence:"All customer records are stored in the {blank}.", level:"B1", kind:"topical"},
+    {id:"algorithm", word:"algorithm", translation:"algoritma", sentence:"The {blank} recommends videos based on what you watch.", level:"B1", kind:"topical"},
+    {id:"update", word:"update", translation:"pembaruan", sentence:"Please install the latest {blank} for security reasons.", level:"A1", kind:"topical"},
+
+    // Topical everyday vocabulary: Travel & transportation.
+    {id:"passport", word:"passport", translation:"paspor", sentence:"Don't forget to bring your {blank} to the airport.", level:"A1", kind:"topical"},
+    {id:"luggage", word:"luggage", translation:"bagasi", sentence:"We checked in our {blank} an hour before departure.", level:"A1", kind:"topical"},
+    {id:"boarding-pass", word:"boarding pass", translation:"kartu naik pesawat", sentence:"Please have your {blank} ready for inspection.", level:"A1", kind:"topical"},
+    {id:"itinerary", word:"itinerary", translation:"rencana perjalanan", sentence:"She planned a detailed {blank} for the trip.", level:"B1", kind:"topical"},
+    {id:"departure", word:"departure", translation:"keberangkatan", sentence:"The {blank} time was delayed by two hours.", level:"A1", kind:"topical"},
+    {id:"arrival", word:"arrival", translation:"kedatangan", sentence:"We waited at the gate for their {blank}.", level:"A1", kind:"topical"},
+    {id:"delay", word:"delay", translation:"penundaan / keterlambatan", sentence:"There was a long {blank} due to bad weather.", level:"A1", kind:"topical"},
+    {id:"layover", word:"layover", translation:"transit penerbangan", sentence:"We have a two-hour {blank} in Singapore.", level:"A2", kind:"topical"},
+    {id:"customs", word:"customs", translation:"bea cukai", sentence:"It took a while to go through {blank}.", level:"A2", kind:"topical"},
+    {id:"immigration", word:"immigration", translation:"imigrasi (bandara)", sentence:"We had to queue at {blank} for almost an hour.", level:"A2", kind:"topical"},
+    {id:"terminal", word:"terminal", translation:"terminal bandara", sentence:"Which {blank} does your flight depart from?", level:"A1", kind:"topical"},
+    {id:"platform", word:"platform", translation:"peron stasiun kereta", sentence:"The train to Bandung leaves from {blank} 3.", level:"A1", kind:"topical"},
+    {id:"fare", word:"fare", translation:"tarif transportasi", sentence:"The bus {blank} increased last month.", level:"A1", kind:"topical"},
+    {id:"reservation", word:"reservation", translation:"reservasi", sentence:"I made a {blank} for two people at 7 PM.", level:"A1", kind:"topical"},
+    {id:"accommodation", word:"accommodation", translation:"akomodasi / penginapan", sentence:"We booked our {blank} online in advance.", level:"A2", kind:"topical"},
+    {id:"souvenir", word:"souvenir", translation:"oleh-oleh / suvenir", sentence:"I bought some {blank}s for my family.", level:"A1", kind:"topical"},
+    {id:"jet-lag", word:"jet lag", translation:"lelah akibat beda zona waktu", sentence:"It took days to recover from the {blank}.", level:"B1", kind:"topical"},
+    {id:"round-trip", word:"round trip", translation:"pulang pergi (tiket)", sentence:"A {blank} ticket is cheaper than two one-way tickets.", level:"A1", kind:"topical"},
+    {id:"connecting-flight", word:"connecting flight", translation:"penerbangan lanjutan", sentence:"We have a {blank} to Tokyo after landing in Bali.", level:"A2", kind:"topical"},
+    {id:"backpack", word:"backpack", translation:"ransel", sentence:"She packed her {blank} the night before the trip.", level:"A1", kind:"topical"},
+
+    // Topical everyday vocabulary: Health & wellness.
+    {id:"appointment", word:"appointment", translation:"janji temu (dokter/klinik)", sentence:"I have a doctor's {blank} tomorrow morning.", level:"A1", kind:"topical"},
+    {id:"symptom", word:"symptom", translation:"gejala", sentence:"Please describe your {blank}s to the doctor.", level:"A2", kind:"topical"},
+    {id:"prescription", word:"prescription", translation:"resep obat", sentence:"The pharmacist filled my {blank} quickly.", level:"A2", kind:"topical"},
+    {id:"pharmacy", word:"pharmacy", translation:"apotek", sentence:"You can buy that medicine at any {blank}.", level:"A1", kind:"topical"},
+    {id:"exercise", word:"exercise", translation:"olahraga / latihan fisik", sentence:"Regular {blank} keeps you healthy.", level:"A1", kind:"topical"},
+    {id:"nutrition", word:"nutrition", translation:"gizi / nutrisi", sentence:"Good {blank} is important for children's growth.", level:"A2", kind:"topical"},
+    {id:"hydrate", word:"hydrate", translation:"meminum cukup air", sentence:"Remember to {blank} during your workout.", level:"A2", kind:"topical"},
+    {id:"immune-system", word:"immune system", translation:"sistem kekebalan tubuh", sentence:"A strong {blank} helps fight off illness.", level:"B1", kind:"topical"},
+    {id:"checkup", word:"checkup", translation:"pemeriksaan rutin", sentence:"She goes for a {blank} every six months.", level:"A2", kind:"topical"},
+    {id:"fitness", word:"fitness", translation:"kebugaran", sentence:"He joined the gym to improve his {blank}.", level:"A1", kind:"topical"},
+    {id:"posture", word:"posture", translation:"postur tubuh", sentence:"Sitting all day can hurt your {blank}.", level:"A2", kind:"topical"},
+    {id:"wellbeing", word:"wellbeing", translation:"kesejahteraan", sentence:"The company cares about employee {blank}.", level:"A2", kind:"topical"},
+    {id:"stamina", word:"stamina", translation:"stamina / daya tahan", sentence:"Running every day builds your {blank}.", level:"A2", kind:"topical"},
+    {id:"recovery", word:"recovery", translation:"pemulihan", sentence:"Full {blank} from the injury took a month.", level:"A2", kind:"topical"},
+    {id:"vitamin", word:"vitamin", translation:"vitamin", sentence:"Oranges are a great source of {blank} C.", level:"A1", kind:"topical"},
+    {id:"balanced-diet", word:"balanced diet", translation:"pola makan seimbang", sentence:"A {blank} includes proteins, carbs, and vegetables.", level:"A2", kind:"topical"},
+    {id:"sleep-schedule", word:"sleep schedule", translation:"jadwal tidur", sentence:"Keeping a regular {blank} improves concentration.", level:"A2", kind:"topical"},
+    {id:"stretch", word:"stretch", translation:"peregangan", sentence:"Always {blank} before exercising.", level:"A1", kind:"topical"},
+    {id:"allergic", word:"allergic", translation:"alergi", sentence:"She is {blank} to peanuts.", level:"A1", kind:"topical"},
+    {id:"energetic", word:"energetic", translation:"penuh energi / bersemangat", sentence:"He always feels {blank} after a morning run.", level:"A1", kind:"topical"},
+
+    // Topical everyday vocabulary: Finance & money.
+    {id:"budget", word:"budget", translation:"anggaran", sentence:"We need to stick to our {blank} this month.", level:"A1", kind:"topical"},
+    {id:"expense", word:"expense", translation:"pengeluaran", sentence:"Please keep track of all business {blank}s.", level:"A2", kind:"topical"},
+    {id:"income", word:"income", translation:"pendapatan", sentence:"Her {blank} increased after the promotion.", level:"A1", kind:"topical"},
+    {id:"savings", word:"savings", translation:"tabungan", sentence:"He puts twenty percent of his paycheck into {blank}.", level:"A1", kind:"topical"},
+    {id:"investment", word:"investment", translation:"investasi", sentence:"Real estate is a popular {blank} choice.", level:"A2", kind:"topical"},
+    {id:"interest-rate", word:"interest rate", translation:"suku bunga", sentence:"The bank raised its {blank} this year.", level:"B1", kind:"topical"},
+    {id:"loan", word:"loan", translation:"pinjaman", sentence:"They took out a {blank} to buy a car.", level:"A2", kind:"topical"},
+    {id:"debt", word:"debt", translation:"utang", sentence:"It's important to pay off {blank} as soon as possible.", level:"A2", kind:"topical"},
+    {id:"transaction", word:"transaction", translation:"transaksi", sentence:"The {blank} was completed within seconds.", level:"A2", kind:"topical"},
+    {id:"invoice", word:"invoice", translation:"faktur / tagihan", sentence:"Please send the {blank} to our finance department.", level:"A2", kind:"topical"},
+    {id:"refund", word:"refund", translation:"pengembalian dana", sentence:"I asked for a {blank} because the item was broken.", level:"A1", kind:"topical"},
+    {id:"discount", word:"discount", translation:"diskon", sentence:"The store is offering a twenty percent {blank} this weekend.", level:"A1", kind:"topical"},
+    {id:"currency", word:"currency", translation:"mata uang", sentence:"The local {blank} is weaker than the dollar.", level:"A1", kind:"topical"},
+    {id:"cash", word:"cash", translation:"uang tunai", sentence:"Do you accept {blank} or only cards?", level:"A1", kind:"topical"},
+    {id:"installment", word:"installment", translation:"cicilan", sentence:"You can pay in monthly {blank}s.", level:"B1", kind:"topical"},
+    {id:"profit", word:"profit", translation:"keuntungan", sentence:"The company reported a huge {blank} this quarter.", level:"A2", kind:"topical"},
+    {id:"revenue", word:"revenue", translation:"pendapatan usaha / omzet", sentence:"Online sales boosted our {blank} significantly.", level:"B1", kind:"topical"},
+    {id:"tax", word:"tax", translation:"pajak", sentence:"You need to file your {blank} before April.", level:"A1", kind:"topical"},
+    {id:"insurance", word:"insurance", translation:"asuransi", sentence:"Health {blank} covers most of the treatment cost.", level:"A2", kind:"topical"},
+    {id:"withdraw", word:"withdraw", translation:"menarik uang", sentence:"I need to {blank} some cash from the ATM.", level:"A1", kind:"topical"},
+
+    // Topical everyday vocabulary: Food & dining.
+    {id:"menu", word:"menu", translation:"daftar menu", sentence:"Can I see the {blank}, please?", level:"A1", kind:"topical"},
+    {id:"appetizer", word:"appetizer", translation:"hidangan pembuka", sentence:"We ordered soup as an {blank}.", level:"A2", kind:"topical"},
+    {id:"leftovers", word:"leftovers", translation:"makanan sisa", sentence:"I'll save the {blank} for lunch tomorrow.", level:"A1", kind:"topical"},
+    {id:"recipe", word:"recipe", translation:"resep masakan", sentence:"She found the {blank} online.", level:"A1", kind:"topical"},
+    {id:"ingredient", word:"ingredient", translation:"bahan masakan", sentence:"Fresh {blank}s make a big difference in flavor.", level:"A1", kind:"topical"},
+    {id:"flavor", word:"flavor", translation:"rasa / cita rasa", sentence:"This sauce has a spicy {blank}.", level:"A1", kind:"topical"},
+    {id:"portion", word:"portion", translation:"porsi", sentence:"The {blank} at this restaurant is quite large.", level:"A2", kind:"topical"},
+    {id:"takeaway", word:"takeaway", translation:"makanan dibawa pulang", sentence:"Let's just order {blank} tonight.", level:"A1", kind:"topical"},
+    {id:"beverage", word:"beverage", translation:"minuman", sentence:"What {blank} would you like with your meal?", level:"A2", kind:"topical"},
+    {id:"craving", word:"craving", translation:"keinginan kuat akan makanan tertentu", sentence:"I have a {blank} for something sweet.", level:"A2", kind:"topical"},
+    {id:"grocery", word:"grocery", translation:"belanjaan bahan makanan", sentence:"I need to do the {blank} shopping this weekend.", level:"A1", kind:"topical"},
+    {id:"tip", word:"tip", translation:"uang tip", sentence:"We left a generous {blank} for the waiter.", level:"A1", kind:"topical"},
+    {id:"spicy", word:"spicy", translation:"pedas", sentence:"This dish is too {blank} for me.", level:"A1", kind:"topical"},
+    {id:"bland", word:"bland", translation:"hambar", sentence:"The soup tasted a bit {blank} without salt.", level:"A2", kind:"topical"},
+    {id:"fresh", word:"fresh", translation:"segar", sentence:"Make sure the fish is {blank} before buying it.", level:"A1", kind:"topical"},
+
+    // Topical everyday vocabulary: Weather & environment.
+    {id:"climate", word:"climate", translation:"iklim", sentence:"The {blank} here is hot and humid all year.", level:"A1", kind:"topical"},
+    {id:"temperature", word:"temperature", translation:"suhu", sentence:"The {blank} dropped suddenly last night.", level:"A1", kind:"topical"},
+    {id:"humidity", word:"humidity", translation:"kelembapan", sentence:"High {blank} makes the heat feel worse.", level:"A2", kind:"topical"},
+    {id:"drought", word:"drought", translation:"kekeringan", sentence:"The region suffered a severe {blank} last summer.", level:"A2", kind:"topical"},
+    {id:"flood", word:"flood", translation:"banjir", sentence:"Heavy rain caused a {blank} in the city center.", level:"A1", kind:"topical"},
+    {id:"pollution", word:"pollution", translation:"polusi", sentence:"Air {blank} is a serious problem in big cities.", level:"A2", kind:"topical"},
+    {id:"recycle", word:"recycle", translation:"mendaur ulang", sentence:"We should {blank} plastic bottles instead of throwing them away.", level:"A1", kind:"topical"},
+    {id:"renewable", word:"renewable", translation:"terbarukan", sentence:"Solar power is a {blank} energy source.", level:"A2", kind:"topical"},
+    {id:"emission", word:"emission", translation:"emisi", sentence:"The new law aims to reduce carbon {blank}s.", level:"B1", kind:"topical"},
+    {id:"forecast", word:"forecast", translation:"prakiraan cuaca", sentence:"The {blank} predicts rain tomorrow.", level:"A1", kind:"topical"},
+    {id:"breeze", word:"breeze", translation:"angin sepoi-sepoi", sentence:"A cool {blank} made the afternoon pleasant.", level:"A2", kind:"topical"},
+    {id:"thunderstorm", word:"thunderstorm", translation:"badai petir", sentence:"A {blank} is expected later tonight.", level:"A1", kind:"topical"},
+    {id:"drizzle", word:"drizzle", translation:"gerimis", sentence:"It was just a light {blank}, not heavy rain.", level:"A2", kind:"topical"},
+    {id:"heatwave", word:"heatwave", translation:"gelombang panas", sentence:"The {blank} lasted for almost two weeks.", level:"A2", kind:"topical"},
+    {id:"sustainability", word:"sustainability", translation:"keberlanjutan", sentence:"The company focuses on {blank} in all its operations.", level:"B1", kind:"topical"},
+
+    // Topical everyday vocabulary: Shopping & retail.
+    {id:"receipt", word:"receipt", translation:"struk belanja", sentence:"Keep your {blank} in case you need to return the item.", level:"A1", kind:"topical"},
+    {id:"warranty", word:"warranty", translation:"garansi", sentence:"This laptop comes with a two-year {blank}.", level:"A2", kind:"topical"},
+    {id:"exchange", word:"exchange", translation:"menukar barang", sentence:"Can I {blank} this shirt for a different size?", level:"A1", kind:"topical"},
+    {id:"cashier", word:"cashier", translation:"kasir", sentence:"Please pay at the {blank} near the entrance.", level:"A1", kind:"topical"},
+    {id:"bargain", word:"bargain", translation:"barang murah / tawar-menawar", sentence:"I found a great {blank} at the flea market.", level:"A2", kind:"topical"},
+    {id:"clearance-sale", word:"clearance sale", translation:"obral besar-besaran", sentence:"Everything is fifty percent off during the {blank}.", level:"A2", kind:"topical"},
+    {id:"price-tag", word:"price tag", translation:"label harga", sentence:"Always check the {blank} before buying.", level:"A1", kind:"topical"},
+    {id:"customer-service", word:"customer service", translation:"layanan pelanggan", sentence:"Their {blank} is very responsive and helpful.", level:"A1", kind:"topical"},
+    {id:"loyalty-program", word:"loyalty program", translation:"program loyalitas pelanggan", sentence:"I earn points through the store's {blank}.", level:"B1", kind:"topical"},
+    {id:"out-of-stock", word:"out of stock", translation:"kehabisan stok", sentence:"Sorry, that item is currently {blank}.", level:"A2", kind:"topical"},
+    {id:"delivery", word:"delivery", translation:"pengiriman", sentence:"Free {blank} is available for orders over fifty dollars.", level:"A1", kind:"topical"},
+    {id:"packaging", word:"packaging", translation:"kemasan", sentence:"The product arrived with damaged {blank}.", level:"A2", kind:"topical"},
+    {id:"brand", word:"brand", translation:"merek", sentence:"She only buys clothes from this {blank}.", level:"A1", kind:"topical"},
+    {id:"quality", word:"quality", translation:"kualitas", sentence:"The {blank} of this product is excellent for the price.", level:"A1", kind:"topical"},
+    {id:"affordable", word:"affordable", translation:"terjangkau", sentence:"We're looking for something stylish but {blank}.", level:"A1", kind:"topical"},
+
+    // Topical everyday vocabulary: Work & office life.
+    {id:"colleague", word:"colleague", translation:"rekan kerja", sentence:"My {blank} helped me finish the report on time.", level:"A1", kind:"topical"},
+    {id:"deadline", word:"deadline", translation:"tenggat waktu", sentence:"We need to submit the proposal before the {blank}.", level:"A1", kind:"topical"},
+    {id:"workload", word:"workload", translation:"beban kerja", sentence:"Her {blank} has increased since the promotion.", level:"A2", kind:"topical"},
+    {id:"overtime", word:"overtime", translation:"lembur", sentence:"He worked {blank} to finish the project.", level:"A1", kind:"topical"},
+    {id:"resignation", word:"resignation", translation:"pengunduran diri", sentence:"She handed in her {blank} letter yesterday.", level:"A2", kind:"topical"},
+    {id:"promotion", word:"promotion", translation:"kenaikan jabatan", sentence:"He received a {blank} after two years.", level:"A1", kind:"topical"},
+    {id:"appraisal", word:"appraisal", translation:"penilaian kinerja", sentence:"My performance {blank} is scheduled for next week.", level:"B1", kind:"topical"},
+    {id:"paperwork", word:"paperwork", translation:"dokumen administratif", sentence:"There's a lot of {blank} to complete before you start.", level:"A2", kind:"topical"},
+    {id:"workplace", word:"workplace", translation:"tempat kerja", sentence:"A positive {blank} improves productivity.", level:"A1", kind:"topical"},
+    {id:"teamwork", word:"teamwork", translation:"kerja sama tim", sentence:"Good {blank} made the project a success.", level:"A1", kind:"topical"},
+    {id:"supervisor", word:"supervisor", translation:"atasan / pengawas", sentence:"You should ask your {blank} for approval first.", level:"A1", kind:"topical"},
+    {id:"internship", word:"internship", translation:"magang", sentence:"She did an {blank} at a marketing agency.", level:"A2", kind:"topical"},
+    {id:"resume", word:"resume", translation:"riwayat hidup / CV", sentence:"Update your {blank} before applying for the job.", level:"A2", kind:"topical"},
+    {id:"job-offer", word:"job offer", translation:"tawaran kerja", sentence:"She accepted the {blank} after negotiating her salary.", level:"A2", kind:"topical"},
+    {id:"work-life-balance", word:"work-life balance", translation:"keseimbangan kerja dan kehidupan pribadi", sentence:"The company promotes a healthy {blank}.", level:"B1", kind:"topical"},
+
+    // Topical everyday vocabulary: Family & relationships.
+    {id:"sibling", word:"sibling", translation:"saudara kandung", sentence:"I have two {blank}s, a brother and a sister.", level:"A1", kind:"topical"},
+    {id:"relative", word:"relative", translation:"kerabat", sentence:"We invited all our {blank}s to the wedding.", level:"A1", kind:"topical"},
+    {id:"neighbor", word:"neighbor", translation:"tetangga", sentence:"Our {blank} is always friendly and helpful.", level:"A1", kind:"topical"},
+    {id:"acquaintance", word:"acquaintance", translation:"kenalan", sentence:"He's just an {blank}, not a close friend.", level:"A2", kind:"topical"},
+    {id:"reunion", word:"reunion", translation:"reuni", sentence:"We're planning a family {blank} next year.", level:"A1", kind:"topical"},
+    {id:"bond", word:"bond", translation:"ikatan hubungan", sentence:"They share a strong {blank} as childhood friends.", level:"A2", kind:"topical"},
+    {id:"trust", word:"trust", translation:"kepercayaan", sentence:"{blank} is the foundation of any good relationship.", level:"A1", kind:"topical"},
+    {id:"supportive", word:"supportive", translation:"suportif", sentence:"Her family has always been very {blank}.", level:"A2", kind:"topical"},
+    {id:"considerate", word:"considerate", translation:"penuh pertimbangan / perhatian", sentence:"He's always {blank} of other people's feelings.", level:"A2", kind:"topical"},
+    {id:"loyalty", word:"loyalty", translation:"kesetiaan", sentence:"Their friendship is built on {blank} and honesty.", level:"A2", kind:"topical"},
+  ];
+
+  var LEVELS = ["A1","A2","B1","B2","C1"];
+  // Vocabulary now only spans A1-B2 (the old ultra-basic A1 tier -- house,
+  // water, friend, happy, eat -- was removed and every remaining word
+  // shifted down one CEFR notch). Grammar's own A1-C1 progression is a
+  // different, independent difficulty ladder and keeps using LEVELS above.
+  var VOCAB_LEVELS = ["A1","A2","B1","B2"];
+
+  var GRAMMAR_A1 = [
+    {
+      id:"to-be", level:"A1", title:"To be (am / is / are)",
+      explanation:"Dipakai untuk menyatakan identitas, sifat, atau kondisi. I → am, He/She/It → is, You/We/They → are.",
+      examples:["I am a teacher.","She is happy.","They are at home."],
+      quiz:[
+        {q:"She ___ my sister.", options:["is","are","am"], answer:"is"},
+        {q:"We ___ ready.", options:["is","am","are"], answer:"are"}
+      ]
+    },
+    {
+      id:"simple-present", level:"A1", title:"Simple Present",
+      explanation:"Untuk kebiasaan, fakta, dan rutinitas. Tambahkan -s / -es untuk subjek he / she / it.",
+      examples:["I work every day.","The sun rises in the east.","She plays tennis on Sundays."],
+      quiz:[
+        {q:"He ___ at a bank.", options:["work","works","working"], answer:"works"},
+        {q:"They ___ coffee.", options:["don't like","doesn't like","not like"], answer:"don't like"}
+      ]
+    },
+    {
+      id:"articles", level:"A1", title:"Artikel a / an / the",
+      explanation:"'a' sebelum kata berawalan konsonan, 'an' sebelum kata berawalan vokal, 'the' untuk sesuatu yang sudah spesifik atau diketahui.",
+      examples:["I saw a cat.","She ate an apple.","The book on the table is mine."],
+      quiz:[
+        {q:"I need ___ umbrella.", options:["a","an","the"], answer:"an"},
+        {q:"___ sun is very bright today.", options:["A","An","The"], answer:"The"}
+      ]
+    },
+    {
+      id:"plural-nouns", level:"A1", title:"Plural Nouns",
+      explanation:"Tambahkan -s untuk kebanyakan kata benda, -es untuk akhiran s/x/ch/sh, ubah y menjadi -ies, dan beberapa bentuk tidak beraturan (irregular).",
+      examples:["one book, two books","one box, two boxes","one city, two cities","one child, two children"],
+      quiz:[
+        {q:"one baby, two ___", options:["babys","babies","babyes"], answer:"babies"},
+        {q:"one man, two ___", options:["mans","men","manes"], answer:"men"}
+      ]
+    },
+    {
+      id:"there-is-are", level:"A1", title:"There is / There are",
+      explanation:"'There is' untuk benda tunggal atau tak terhitung, 'There are' untuk benda jamak.",
+      examples:["There is a cat on the roof.","There are three books on the table.","There isn't any milk left."],
+      quiz:[
+        {q:"___ a park near my house.", options:["There is","There are"], answer:"There is"},
+        {q:"___ many people at the concert.", options:["There is","There are"], answer:"There are"}
+      ]
+    }
+  ];
+
+  var GRAMMAR_PREVIEW = {
+    A2: ["Present continuous","Past simple (reguler & irregular)","Past continuous","Comparative & superlative","Countable/uncountable + some/any","Future (going to/will)","Modal dasar (can/could/should/must)","Conjunctions dasar"],
+    B1: ["Present perfect vs simple past","Present perfect continuous","Past perfect","First & second conditional","Passive voice dasar","Reported speech dasar","Relative clauses (who/which/that)","Gerund vs infinitive"],
+    B2: ["Third conditional & mixed conditionals","Passive voice lanjutan","Reported speech lanjutan","Relative clauses non-defining","Modal perfect (should have/could have)","Phrasal verbs kontekstual","Linking words lanjutan"],
+    C1: ["Inversion untuk penekanan","Advanced conditionals & wish/if only","Participle clauses","Advanced passive constructions","Nuansa modal","Collocations & idiomatic expressions","Discourse markers formal"]
+  };
+
+  // These size a single sesi/latihan tambahan, not a daily allowance --
+  // there is no longer a "you've hit today's limit" wall. Start another
+  // session (via "Latihan Tambahan") as many times as you want in one day
+  // to keep introducing more new words and clearing more reviews.
+  var SESSION_REVIEW_CAP = 15;
+  var NEW_WORDS_PER_SESSION = 8;
+
+  /* ---------------- helpers ---------------- */
+
+  function pad(n){ return n<10 ? "0"+n : ""+n; }
+  function todayStr(){
+    var d = new Date();
+    return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+  }
+  function addDaysStr(str, days){
+    var d = new Date(str+"T00:00:00");
+    d.setDate(d.getDate()+days);
+    return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+  }
+  function vocabById(id){
+    for (var i=0;i<VOCAB.length;i++) if (VOCAB[i].id===id) return VOCAB[i];
+    return null;
+  }
+  function grammarById(id){
+    for (var i=0;i<GRAMMAR_A1.length;i++) if (GRAMMAR_A1[i].id===id) return GRAMMAR_A1[i];
+    return null;
+  }
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  /* ---------------- spaced repetition (SM-2), mirrors the RN app's spacedRepetition.ts ---------------- */
+
+  function scheduleNextReview(prev, quality, today){
+    var repetitions = prev.repetitions, easeFactor = prev.easeFactor, intervalDays = prev.intervalDays;
+    if (quality < 3){
+      repetitions = 0;
+      intervalDays = 1;
+    } else {
+      repetitions += 1;
+      if (repetitions === 1) intervalDays = 1;
+      else if (repetitions === 2) intervalDays = 6;
+      else intervalDays = Math.round(intervalDays * easeFactor);
+    }
+    easeFactor = Math.max(1.3, easeFactor + (0.1 - (5-quality)*(0.08 + (5-quality)*0.02)));
+    var dueDate = addDaysStr(today, intervalDays);
+    var mastered = repetitions >= 4 && intervalDays >= 21;
+    return {
+      wordId: prev.wordId,
+      introducedAt: prev.introducedAt || today,
+      repetitions: repetitions,
+      easeFactor: easeFactor,
+      intervalDays: intervalDays,
+      dueDate: dueDate,
+      lastReviewedAt: today,
+      mastered: mastered
+    };
+  }
+
+  function freshReviewState(wordId, today){
+    return { wordId: wordId, introducedAt: today, repetitions:0, easeFactor:2.5, intervalDays:0, dueDate:today, lastReviewedAt:null, mastered:false };
+  }
+
+  /* ---------------- state ---------------- */
+
+  var DEFAULT_STATE = {
+    reviewStates:{},
+    grammarProgress:{},
+    meta:{ currentStreakDays:0, longestStreakDays:0, lastSessionDate:null }
+  };
+
+  var state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+  var persistTimer = null;
+
+  function clone(o){ return JSON.parse(JSON.stringify(o)); }
+
+  var dirty = false;
+
+  // Netlify build: no Claude Artifact db capability here, so persistence is
+  // plain per-device local storage. Cross-device continuity is deliberately
+  // manual (see exportProgress/importProgress below) rather than automatic --
+  // no accounts, no backend, works instantly and for free for anyone who
+  // opens the site.
+  function writeSnapshot(){
+    var snapshot = clone(state);
+    try { localStorage.setItem("english-daily-state", JSON.stringify(snapshot)); } catch(e){}
+  }
+
+  function persist(){
+    dirty = true;
+    clearTimeout(persistTimer);
+    persistTimer = setTimeout(writeSnapshot, 350);
+  }
+
+  function flushPersist(){
+    if (!dirty) return;
+    clearTimeout(persistTimer);
+    writeSnapshot();
+  }
+
+  function mergeLoadedState(loaded){
+    // Guard against a slow initial load resolving AFTER the user has
+    // already started interacting (and possibly changed local state) --
+    // local changes always win over a stale remote read.
+    if (dirty) return;
+    if (!loaded || typeof loaded !== "object") return;
+    // db snapshots (and their .data()) are delivered FROZEN -- clone
+    // before adopting them into `state`, or later mutations (e.g. adding
+    // a new grammarProgress[id] key) throw "object is not extensible".
+    state.reviewStates = clone(loaded.reviewStates || {});
+    state.grammarProgress = clone(loaded.grammarProgress || {});
+    state.meta = Object.assign({currentStreakDays:0, longestStreakDays:0, lastSessionDate:null}, clone(loaded.meta || {}));
+    render();
+  }
+
+  function initPersistence(){
+    try {
+      var raw = localStorage.getItem("english-daily-state");
+      if (raw) mergeLoadedState(JSON.parse(raw));
+    } catch(e){}
+  }
+
+  // Manual cross-device continuity: since there is no account/login system,
+  // moving progress from one device to another (e.g. HP -> laptop) is a
+  // deliberate export-then-import, not automatic. Kept intentionally simple
+  // (one JSON file, no server round-trip) -- an automatic-sync upgrade path
+  // (accounts + a real backend) can be layered on later without touching
+  // this shape, since it's exactly the same `state` object used everywhere
+  // else in the app.
+  function exportProgress(){
+    var snapshot = clone(state);
+    var blob = new Blob([JSON.stringify(snapshot, null, 2)], {type:"application/json"});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "english-daily-progress-" + todayStr() + ".json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function importProgressFromFile(file){
+    var reader = new FileReader();
+    reader.onload = function(){
+      try {
+        var loaded = JSON.parse(String(reader.result));
+        if (!loaded || typeof loaded !== "object") throw new Error("format tidak dikenali");
+        state.reviewStates = clone(loaded.reviewStates || {});
+        state.grammarProgress = clone(loaded.grammarProgress || {});
+        state.meta = Object.assign({currentStreakDays:0, longestStreakDays:0, lastSessionDate:null}, clone(loaded.meta || {}));
+        dirty = true;
+        flushPersist();
+        render();
+        var view = document.getElementById("view");
+        var note = document.createElement("div");
+        note.className = "empty-note";
+        note.textContent = "Progres berhasil diimpor.";
+        view.prepend(note);
+        setTimeout(function(){ note.remove(); }, 2200);
+      } catch(e){
+        var view2 = document.getElementById("view");
+        var note2 = document.createElement("div");
+        note2.className = "empty-note";
+        note2.textContent = "Gagal mengimpor file -- pastikan ini file export dari aplikasi ini.";
+        view2.prepend(note2);
+        setTimeout(function(){ note2.remove(); }, 3000);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // Wipe all learning progress (reviewStates, grammarProgress, streak) and
+  // start fresh, as if the user had just installed the app. Writes
+  // immediately (not debounced) since this is a deliberate, infrequent action.
+  function resetProgress(){
+    state = clone(DEFAULT_STATE);
+    dirty = true;
+    resetConfirmOpen = false;
+    flushPersist();
+    render();
+  }
+
+  /* ---------------- domain logic ---------------- */
+
+  function shuffle(arr){
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function dueVocabCount(){
+    var today = todayStr();
+    var c = 0;
+    for (var id in state.reviewStates) if (state.reviewStates[id].dueDate <= today) c++;
+    return c;
+  }
+  // How many new words the NEXT session will introduce -- not a daily
+  // allowance check, just the per-session batch size (or fewer, if the
+  // whole catalog is nearly exhausted).
+  function newAvailableTodayCount(){
+    var notIntroduced = 0;
+    for (var i=0;i<VOCAB.length;i++) if (!state.reviewStates[VOCAB[i].id]) notIntroduced++;
+    return Math.min(NEW_WORDS_PER_SESSION, notIntroduced);
+  }
+  function pickGrammarTopicForToday(){
+    var today = todayStr();
+    var notDoneToday = GRAMMAR_A1.filter(function(t){
+      var p = state.grammarProgress[t.id];
+      return !p || p.lastReviewedAt !== today;
+    });
+    if (notDoneToday.length === 0) return null;
+    var incomplete = notDoneToday.filter(function(t){
+      var p = state.grammarProgress[t.id];
+      return !p || !p.completed;
+    });
+    if (incomplete.length > 0) return incomplete[0];
+    notDoneToday.sort(function(a,b){
+      var da = (state.grammarProgress[a.id]||{}).lastReviewedAt || "";
+      var db_ = (state.grammarProgress[b.id]||{}).lastReviewedAt || "";
+      return da.localeCompare(db_);
+    });
+    return notDoneToday[0];
+  }
+  // New words are picked from the not-yet-learned pool, preferring anything
+  // above the absolute-beginner (A1) tier -- A1 is only used as filler once
+  // every more advanced word has already been introduced. Within whichever
+  // pool is used, the pick is randomized rather than always taking the
+  // words in the same fixed catalog order.
+  function pickNewWords(count){
+    if (count <= 0) return [];
+    // No more A1-deprioritization split needed: since the ultra-basic
+    // words were removed, every remaining A1 entry is genuinely reasonable
+    // starter vocabulary, not something to shuffle to the back.
+    var unlearned = VOCAB.filter(function(w){ return !state.reviewStates[w.id]; });
+    return shuffle(unlearned).slice(0, count);
+  }
+
+  // A session has two separate phases, not one interleaved list:
+  // (1) STUDY -- every new word for today shown one after another, word +
+  //     meaning + example together, no quiz in between;
+  // (2) QUIZ -- all of those just-studied words PLUS every word due for
+  //     review, as one batch, in an order shuffled independently of the
+  //     study order (so the quiz doesn't just replay the same sequence).
+  // Grammar (if any) comes after both, as its own step.
+  function buildSessionPlan(){
+    var today = todayStr();
+    var due = [];
+    for (var id in state.reviewStates){
+      // vocabById guard: a word removed from the catalog after being
+      // learned shouldn't crash the session -- just drop its review.
+      if (state.reviewStates[id].dueDate <= today && vocabById(id)) due.push(state.reviewStates[id]);
+    }
+    due.sort(function(a,b){ return a.dueDate.localeCompare(b.dueDate); });
+    var dueCapped = due.slice(0, SESSION_REVIEW_CAP);
+
+    var notIntroduced = VOCAB.filter(function(w){ return !state.reviewStates[w.id]; }).length;
+    var newCount = Math.min(NEW_WORDS_PER_SESSION, notIntroduced);
+    var newWords = pickNewWords(newCount);
+
+    var studyList = newWords.map(function(w){ return w.id; });
+
+    var quizItems = [];
+    newWords.forEach(function(w){ quizItems.push({wordId:w.id, isNew:true}); });
+    dueCapped.forEach(function(r){ quizItems.push({wordId:r.wordId, isNew:false}); });
+    var quizList = shuffle(quizItems);
+
+    var topic = pickGrammarTopicForToday();
+
+    return { studyList:studyList, quizList:quizList, grammarTopic:topic };
+  }
+  function levelStats(){
+    return VOCAB_LEVELS.map(function(lv){
+      var words = VOCAB.filter(function(w){ return w.level===lv; });
+      var mastered = 0, introduced = 0;
+      words.forEach(function(w){
+        var r = state.reviewStates[w.id];
+        if (!r) return;
+        introduced++;
+        if (r.mastered) mastered++;
+      });
+      // "introduced" includes mastered words too (it's every word that has
+      // been started), so the UI can stack: solid bar = mastered, lighter
+      // bar = introduced but not yet mastered = introduced - mastered.
+      return { level:lv, total:words.length, mastered:mastered, introduced:introduced };
+    });
+  }
+  function totalMastered(){
+    var c = 0;
+    for (var id in state.reviewStates) if (state.reviewStates[id].mastered) c++;
+    return c;
+  }
+  function grammarCompletedCount(){
+    var c = 0;
+    GRAMMAR_A1.forEach(function(t){
+      var p = state.grammarProgress[t.id];
+      if (p && p.completed) c++;
+    });
+    return c;
+  }
+
+  function completeSession(isExtra){
+    var today = todayStr();
+    if (!isExtra && state.meta.lastSessionDate !== today){
+      var yesterday = addDaysStr(today, -1);
+      if (state.meta.lastSessionDate === yesterday) state.meta.currentStreakDays += 1;
+      else state.meta.currentStreakDays = 1;
+      state.meta.lastSessionDate = today;
+      state.meta.longestStreakDays = Math.max(state.meta.longestStreakDays, state.meta.currentStreakDays);
+    }
+    persist();
+  }
+
+  /* ---------------- rendering: shell ---------------- */
+
+  var activeTab = "home";
+  var resetConfirmOpen = false;
+  var sessionState = null;
+
+  function render(){
+    document.getElementById("streak-num").textContent = state.meta.currentStreakDays;
+    if (sessionState){ renderSession(); return; }
+    var view = document.getElementById("view");
+    if (activeTab === "home") view.innerHTML = homeHtml();
+    else if (activeTab === "vocab") view.innerHTML = vocabHtml();
+    else if (activeTab === "grammar") view.innerHTML = grammarHtml();
+    else if (activeTab === "progress") view.innerHTML = progressHtml();
+  }
+
+  function setTab(name){
+    activeTab = name;
+    if (name !== "progress") resetConfirmOpen = false;
+    document.querySelectorAll(".tab").forEach(function(btn){
+      btn.classList.toggle("active", btn.getAttribute("data-tab") === name);
+    });
+    render();
+  }
+
+  /* ---------------- rendering: home ---------------- */
+
+  function homeHtml(){
+    var today = todayStr();
+    var doneToday = state.meta.lastSessionDate === today;
+    var due = dueVocabCount();
+    var fresh = newAvailableTodayCount();
+    var grammarLeft = pickGrammarTopicForToday();
+    var hasSomethingLeft = due > 0 || fresh > 0 || !!grammarLeft;
+
+    var subtitle, ctaLabel, ctaAttr;
+    if (!doneToday){
+      var parts = [];
+      if (due > 0) parts.push(due + " kata untuk direview");
+      if (fresh > 0) parts.push(fresh + " kata baru");
+      if (grammarLeft) parts.push("1 topik grammar");
+      subtitle = parts.length ? parts.join(" &middot; ") : "Semua materi untuk hari ini sudah dipelajari.";
+      ctaLabel = "Mulai Sesi Hari Ini";
+      ctaAttr = hasSomethingLeft ? "data-action=\"start-session\"" : "disabled";
+    } else if (hasSomethingLeft){
+      subtitle = "Sesi hari ini sudah selesai. Latihan tambahan tidak memengaruhi hari beruntun.";
+      ctaLabel = "Latihan Tambahan";
+      ctaAttr = "data-action=\"start-session-extra\"";
+    } else {
+      subtitle = "Semua materi untuk hari ini sudah dipelajari. Sampai jumpa besok!";
+      ctaLabel = "Sudah Selesai Hari Ini";
+      ctaAttr = "disabled";
+    }
+
+    var html = "";
+    html += "<div class=\"hero-card\">";
+    html += "  <div class=\"hero-top\">";
+    html += "    <div class=\"flame-badge\">";
+    html += "      <svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M12 22c4.4 0 7-2.7 7-6.5 0-3-1.8-4.7-3-6.3.4 2-.5 3-1.5 3.3-.2-2.6-1.5-5-4-6.8-.3 2-1 3.4-2.3 4.7C6.8 11.8 5 13.7 5 16.2 5 19.6 7.8 22 12 22Z\"/></svg>";
+    html += "      <div><div class=\"flame-num\">" + state.meta.currentStreakDays + "</div><div class=\"flame-label\">hari beruntun</div></div>";
+    html += "    </div>";
+    html += "    <span class=\"badge badge-good\">" + totalMastered() + "/" + VOCAB.length + " dikuasai</span>";
+    html += "  </div>";
+    html += "  <p class=\"hero-sub\">" + subtitle + "</p>";
+    html += "  <button class=\"btn btn-primary\" " + ctaAttr + ">" + ctaLabel + "</button>";
+    html += "</div>";
+
+    html += "<h2 class=\"section-title\">Ringkasan</h2>";
+    html += "<div class=\"stat-grid\">";
+    html += statTile(state.meta.currentStreakDays, "Hari beruntun");
+    html += statTile(state.meta.longestStreakDays, "Rekor beruntun");
+    html += statTile(totalMastered(), "Kata dikuasai");
+    html += "</div>";
+
+    html += "<h2 class=\"section-title\">Progres per level</h2>";
+    html += "<div class=\"card\">";
+    levelStats().forEach(function(s){
+      var pct = s.total ? Math.round((s.mastered/s.total)*100) : 0;
+      html += "<div class=\"level-row\"><span class=\"lv-tag\">" + s.level + "</span><div class=\"level-track\"><div class=\"level-fill\" style=\"width:" + pct + "%\"></div></div><span class=\"lv-count\">" + s.mastered + "/" + s.total + "</span></div>";
+    });
+    html += "</div>";
+
+    return html;
+  }
+
+  function statTile(value, caption){
+    return "<div class=\"stat-tile\"><div class=\"stat-value\">" + value + "</div><div class=\"stat-caption\">" + caption + "</div></div>";
+  }
+
+  /* ---------------- rendering: vocab list ---------------- */
+
+  // Natural CEFR order. There's no more "too basic, hide it at the back"
+  // tier to work around (see VOCAB_LEVELS) -- A1 is a normal starting
+  // point again, so it's shown first like every other level list.
+  var VOCAB_DISPLAY_ORDER = VOCAB_LEVELS;
+
+  function vocabHtml(){
+    var html = "<h2 class=\"section-title\">Kosakata</h2><p class=\"section-sub\">" + VOCAB.length + " kata & frasa (percakapan, formal, phrasal verb, gerund, idiom, tema sehari-hari), level A1&ndash;B2. Kata baru diperkenalkan lewat kuis secara acak, tidak dibatasi harian &mdash; lalu diulang lagi lewat kuis review.</p>";
+    VOCAB_DISPLAY_ORDER.forEach(function(lv){
+      var words = VOCAB.filter(function(w){ return w.level === lv; });
+      var mastered = words.filter(function(w){ var r = state.reviewStates[w.id]; return r && r.mastered; }).length;
+      html += "<div class=\"word-group\"><div class=\"word-group-head\"><h3>Level " + lv + "</h3><span class=\"badge badge-muted\">" + mastered + "/" + words.length + "</span></div>";
+      words.forEach(function(w){
+        var r = state.reviewStates[w.id];
+        var dotClass = r ? (r.mastered ? "mastered" : "learning") : "";
+        var kindTag = VOCAB_KIND_LABELS[w.kind] ? " <span class=\"badge badge-muted\" style=\"font-size:.6rem;vertical-align:middle\">" + VOCAB_KIND_LABELS[w.kind] + "</span>" : "";
+        html += "<div class=\"word-row\"><span class=\"word-dot " + dotClass + "\"></span><div class=\"word-main\"><div class=\"word-en\">" + escapeHtml(w.word) + kindTag + "</div><div class=\"word-id\">" + escapeHtml(w.translation) + "</div></div></div>";
+      });
+      html += "</div>";
+    });
+    return html;
+  }
+
+  /* ---------------- rendering: grammar list ---------------- */
+
+  function grammarHtml(){
+    var html = "<h2 class=\"section-title\">Grammar</h2><p class=\"section-sub\">Kurikulum inti dimulai dari level A1. " + grammarCompletedCount() + "/" + GRAMMAR_A1.length + " topik sudah dipelajari.</p>";
+    GRAMMAR_A1.forEach(function(t){
+      var p = state.grammarProgress[t.id];
+      var badge = p && p.completed ? "<span class=\"badge badge-good\">Selesai</span>" : "<span class=\"badge badge-muted\">Belum</span>";
+      html += "<details class=\"topic\"><summary><span>" + escapeHtml(t.title) + "</span><span style=\"display:flex;align-items:center;gap:.5rem\">" + badge + "<svg class=\"chev\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M9 6l6 6-6 6\"/></svg></span></summary>";
+      html += "<div class=\"topic-body\"><p class=\"topic-explain\">" + escapeHtml(t.explanation) + "</p>";
+      t.examples.forEach(function(ex){ html += "<div class=\"topic-example\">" + escapeHtml(ex) + "</div>"; });
+      html += "</div></details>";
+    });
+    LEVELS.slice(1).forEach(function(lv){
+      html += "<div class=\"locked-level-head\">Level " + lv + " &middot; segera</div>";
+      GRAMMAR_PREVIEW[lv].forEach(function(title){
+        html += "<div class=\"locked-row\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"><rect x=\"5\" y=\"10\" width=\"14\" height=\"9\" rx=\"1.5\"/><path d=\"M8 10V7a4 4 0 0 1 8 0v3\"/></svg>" + escapeHtml(title) + "</div>";
+      });
+    });
+    return html;
+  }
+
+  /* ---------------- rendering: progress ---------------- */
+
+  function progressHtml(){
+    var html = "<h2 class=\"section-title\">Progres</h2>";
+    html += "<div class=\"stat-grid\">";
+    html += statTile(state.meta.currentStreakDays, "Hari beruntun saat ini");
+    html += statTile(state.meta.longestStreakDays, "Rekor hari beruntun");
+    html += statTile(totalMastered() + "/" + VOCAB.length, "Kata dikuasai");
+    html += "</div>";
+
+    html += "<h2 class=\"section-title\">Kosakata per level</h2><p class=\"section-sub\">Bar terang = sedang dipelajari, bar solid = sudah dikuasai (butuh sekitar 3 minggu review yang konsisten).</p><div class=\"card\">";
+    levelStats().forEach(function(s){
+      var masteredPct = s.total ? Math.round((s.mastered/s.total)*100) : 0;
+      var introducedPct = s.total ? Math.round((s.introduced/s.total)*100) : 0;
+      html += "<div class=\"level-row\"><span class=\"lv-tag\">" + s.level + "</span><div class=\"level-track\"><div class=\"level-fill level-fill-learning\" style=\"width:" + introducedPct + "%\"></div><div class=\"level-fill\" style=\"width:" + masteredPct + "%\"></div></div><span class=\"lv-count\">" + s.mastered + "/" + s.total + "</span></div>";
+    });
+    html += "</div>";
+
+    // Labeled "Dasar" (not "A1") on purpose: this tracks the 5 core
+    // grammar topics (to-be, simple present, articles, plural nouns,
+    // there is/are), a completely separate progression from the vocab
+    // CEFR levels above. Calling it "A1" here reads as a leftover of the
+    // deleted vocab A1 tier even though it's unrelated -- so the label was
+    // changed to avoid that confusion, while the underlying progress data
+    // (grammarProgress, GRAMMAR_A1) is untouched.
+    html += "<h2 class=\"section-title\">Grammar Dasar</h2><div class=\"card\">";
+    html += "<div class=\"level-row\"><span class=\"lv-tag\" style=\"width:auto;white-space:nowrap\">Dasar</span><div class=\"level-track\"><div class=\"level-fill\" style=\"width:" + Math.round((grammarCompletedCount()/GRAMMAR_A1.length)*100) + "%\"></div></div><span class=\"lv-count\">" + grammarCompletedCount() + "/" + GRAMMAR_A1.length + "</span></div>";
+    html += "</div>";
+
+    html += "<h2 class=\"section-title\">Pindah Perangkat</h2><div class=\"card\">";
+    html += "<p class=\"section-sub\" style=\"margin:0 0 .8rem\">Progres tersimpan di perangkat ini saja. Untuk melanjutkan di HP/laptop lain, export dulu di sini, lalu import file-nya di perangkat itu.</p>";
+    html += "<div style=\"display:flex;gap:.6rem\">";
+    html += "<button class=\"btn btn-secondary\" data-action=\"export-progress\">Export Progres</button>";
+    html += "<button class=\"btn btn-secondary\" data-action=\"import-progress\">Import Progres</button>";
+    html += "</div>";
+    html += "<input type=\"file\" id=\"import-file-input\" accept=\"application/json\" hidden>";
+    html += "</div>";
+
+    html += "<h2 class=\"section-title\">Mulai Ulang</h2><div class=\"card\">";
+    if (!resetConfirmOpen){
+      html += "<p class=\"section-sub\" style=\"margin:0 0 .8rem\">Hapus semua progres (kosakata, grammar, hari beruntun) dan mulai belajar dari awal lagi.</p>";
+      html += "<button class=\"btn btn-danger\" data-action=\"reset-progress-ask\">Reset Progres</button>";
+    } else {
+      html += "<p class=\"section-sub\" style=\"margin:0 0 .8rem\"><b>Yakin?</b> Semua kata yang sudah dipelajari, progres grammar, dan hari beruntun akan hilang permanen. Ini tidak bisa dibatalkan.</p>";
+      html += "<div style=\"display:flex;gap:.6rem\">";
+      html += "<button class=\"btn btn-ghost\" data-action=\"reset-progress-cancel\">Batal</button>";
+      html += "<button class=\"btn btn-danger\" data-action=\"reset-progress-confirm\">Ya, Reset</button>";
+      html += "</div>";
+    }
+    html += "</div>";
+
+    return html;
+  }
+
+  /* ---------------- session flow ---------------- */
+
+  function startSession(isExtra){
+    var plan = buildSessionPlan();
+    if (plan.studyList.length === 0 && plan.quizList.length === 0 && !plan.grammarTopic){
+      var view = document.getElementById("view");
+      var note = document.createElement("div");
+      note.className = "empty-note";
+      note.textContent = "Tidak ada yang perlu dipelajari sekarang. Coba lagi nanti atau besok.";
+      view.prepend(note);
+      setTimeout(function(){ note.remove(); }, 2200);
+      return;
+    }
+    sessionState = {
+      isExtra: !!isExtra,
+      studyList: plan.studyList,
+      studyIndex: 0,
+      quizList: plan.quizList,
+      quizIndex: 0,
+      vocabAnswered: false,
+      vocabChosen: null,
+      vocabCorrect: false,
+      vocabOptions: null,
+      grammarTopic: plan.grammarTopic,
+      grammarDone: !plan.grammarTopic,
+      grammarQuizIndex: -1,
+      grammarQuizAnswered: false,
+      tally: { reviewed:0, introduced:0, grammarTitle:null }
+    };
+    document.getElementById("session").hidden = false;
+    renderSession();
+  }
+
+  function endSession(){
+    sessionState = null;
+    document.getElementById("session").hidden = true;
+    render();
+  }
+
+  function renderSession(){
+    var s = sessionState;
+    var total = Math.max(1, s.studyList.length + s.quizList.length + (s.grammarTopic ? 1 : 0));
+    var done;
+    if (s.studyIndex < s.studyList.length) done = s.studyIndex;
+    else if (s.quizIndex < s.quizList.length) done = s.studyList.length + s.quizIndex;
+    else if (!s.grammarDone) done = s.studyList.length + s.quizList.length;
+    else done = total;
+    document.getElementById("session-progress-fill").style.width = Math.round((done/total)*100) + "%";
+
+    if (s.studyIndex < s.studyList.length){ renderStudyCard(s.studyList[s.studyIndex]); return; }
+    if (s.quizIndex < s.quizList.length){ renderVocabQuizStep(s.quizList[s.quizIndex]); return; }
+    if (!s.grammarDone){ renderGrammarStep(); return; }
+    renderSummary();
+  }
+
+  // Study phase: every new word for today, shown one after another --
+  // word, translation, and example together, no quiz interleaved. Only
+  // once every word in this batch has been seen does the quiz phase begin.
+  function renderStudyCard(wordId){
+    var word = vocabById(wordId);
+    var body = document.getElementById("session-body");
+    var bottom = document.getElementById("session-bottom");
+    var sentence = escapeHtml(word.sentence).replace("{blank}", "<b>" + escapeHtml(word.word) + "</b>");
+    body.innerHTML =
+      "<div class=\"flashcard\">" +
+      "<span class=\"badge badge-accent fc-level\">" + word.level + " &middot; baru (" + (sessionState.studyIndex + 1) + "/" + sessionState.studyList.length + ")</span>" +
+      "<div class=\"fc-word\">" + escapeHtml(word.word) + "</div>" +
+      "<div class=\"fc-prompt\">" + escapeHtml(word.translation) + "</div>" +
+      "<div class=\"fc-example\">" + sentence + "</div>" +
+      "</div>";
+    var isLast = sessionState.studyIndex === sessionState.studyList.length - 1;
+    bottom.innerHTML = "<button class=\"btn btn-primary\" data-action=\"study-next\">" + (isLast ? "Mulai Kuis" : "Lanjut") + "</button>";
+  }
+
+  // Active-recall multiple-choice quiz, shared by both a just-studied new
+  // word and a word due for review -- same test either way, only the badge
+  // label and the daily tally (introduced vs. reviewed) differ.
+  function buildVocabOptions(word){
+    var pool = VOCAB.filter(function(w){ return w.id !== word.id; }).slice();
+    for (var i = pool.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+    }
+    var options = pool.slice(0, 3).map(function(w){ return w.word; });
+    options.push(word.word);
+    for (var k = options.length - 1; k > 0; k--){
+      var l = Math.floor(Math.random() * (k + 1));
+      var t = options[k]; options[k] = options[l]; options[l] = t;
+    }
+    return options;
+  }
+
+  function renderVocabQuizStep(item){
+    var word = vocabById(item.wordId);
+    var body = document.getElementById("session-body");
+    var bottom = document.getElementById("session-bottom");
+
+    if (!sessionState.vocabOptions) sessionState.vocabOptions = buildVocabOptions(word);
+    var metaLabel = item.isNew ? "kuis" : "review";
+    var meta = "<div class=\"quiz-meta\"><span class=\"badge badge-accent\">" + word.level + " &middot; " + metaLabel + "</span></div>";
+
+    if (!sessionState.vocabAnswered){
+      var html = meta + "<div class=\"quiz-q\">Apa bahasa Inggris dari \"" + escapeHtml(word.translation) + "\"?</div><div class=\"quiz-options\">";
+      sessionState.vocabOptions.forEach(function(opt){
+        html += "<button class=\"quiz-opt\" data-action=\"vocab-answer\" data-word=\"" + escapeHtml(opt) + "\">" + escapeHtml(opt) + "</button>";
+      });
+      html += "</div>";
+      body.innerHTML = html;
+      bottom.innerHTML = "<button class=\"btn btn-ghost\" disabled data-action=\"noop\">Pilih jawaban di atas</button>";
+    } else {
+      var sentence = escapeHtml(word.sentence).replace("{blank}", "<b>" + escapeHtml(word.word) + "</b>");
+      var html2 = meta + "<div class=\"quiz-q\">Apa bahasa Inggris dari \"" + escapeHtml(word.translation) + "\"?</div><div class=\"quiz-options\">";
+      sessionState.vocabOptions.forEach(function(opt){
+        var cls = "quiz-opt";
+        if (opt === word.word) cls += " correct";
+        else if (opt === sessionState.vocabChosen) cls += " wrong";
+        html2 += "<button class=\"" + cls + "\" disabled>" + escapeHtml(opt) + "</button>";
+      });
+      html2 += "</div><div class=\"topic-example\" style=\"margin-top:1rem\">" + sentence + "</div>";
+      body.innerHTML = html2;
+      bottom.innerHTML = "<button class=\"btn btn-primary\" data-action=\"vocab-continue\">Lanjut</button>";
+    }
+  }
+
+  function renderGrammarStep(){
+    var topic = sessionState.grammarTopic;
+    var body = document.getElementById("session-body");
+    var bottom = document.getElementById("session-bottom");
+
+    if (sessionState.grammarQuizIndex < 0){
+      // intro screen
+      var html = "<div><span class=\"badge badge-accent\">" + topic.level + "</span>";
+      html += "<h2 style=\"font-family:'Fraunces',serif;font-size:1.3rem;margin:.7rem 0 .5rem;\">" + escapeHtml(topic.title) + "</h2>";
+      html += "<p class=\"topic-explain\">" + escapeHtml(topic.explanation) + "</p>";
+      topic.examples.forEach(function(ex){ html += "<div class=\"topic-example\">" + escapeHtml(ex) + "</div>"; });
+      html += "</div>";
+      body.innerHTML = html;
+      bottom.innerHTML = "<button class=\"btn btn-primary\" data-action=\"start-quiz\">Mulai Kuis</button>";
+      return;
+    }
+
+    if (sessionState.grammarQuizIndex >= topic.quiz.length){
+      sessionState.tally.grammarTitle = topic.title;
+      var today = todayStr();
+      state.grammarProgress[topic.id] = { completed:true, lastReviewedAt: today };
+      persist();
+      sessionState.grammarDone = true;
+      renderSession();
+      return;
+    }
+
+    var q = topic.quiz[sessionState.grammarQuizIndex];
+    var html2 = "<div class=\"quiz-q\">" + escapeHtml(q.q) + "</div><div class=\"quiz-options\">";
+    q.options.forEach(function(opt, i){
+      html2 += "<button class=\"quiz-opt\" data-action=\"answer\" data-index=\"" + i + "\">" + escapeHtml(opt) + "</button>";
+    });
+    html2 += "</div>";
+    body.innerHTML = html2;
+    bottom.innerHTML = "<button class=\"btn btn-ghost\" disabled data-action=\"noop\">Pilih jawaban di atas</button>";
+  }
+
+  function renderSummary(){
+    if (!sessionState._counted){
+      sessionState._counted = true;
+      completeSession(sessionState.isExtra);
+      document.getElementById("streak-num").textContent = state.meta.currentStreakDays;
+      flushPersist();
+    }
+    var body = document.getElementById("session-body");
+    var bottom = document.getElementById("session-bottom");
+    var t = sessionState.tally;
+    var html = "<div class=\"summary-wrap\">";
+    html += "<svg class=\"sw-check\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M8 12.5l2.5 2.5L16 9.5\"/></svg>";
+    html += "<h2>Sesi selesai!</h2>";
+    html += "<p class=\"section-sub\" style=\"margin:0\">Kerja bagus, sampai jumpa lagi.</p>";
+    html += "<div class=\"summary-list\">";
+    html += "<div class=\"summary-item\"><span>Kata direview</span><b>" + t.reviewed + "</b></div>";
+    html += "<div class=\"summary-item\"><span>Kata baru</span><b>" + t.introduced + "</b></div>";
+    if (t.grammarTitle) html += "<div class=\"summary-item\"><span>Grammar</span><b>" + escapeHtml(t.grammarTitle) + "</b></div>";
+    if (!sessionState.isExtra) html += "<div class=\"summary-item\"><span>Hari beruntun</span><b>" + state.meta.currentStreakDays + "</b></div>";
+    html += "</div></div>";
+    body.innerHTML = html;
+    bottom.innerHTML = "<button class=\"btn btn-primary\" data-action=\"finish-session\">Selesai</button>";
+  }
+
+  /* ---------------- event delegation ---------------- */
+
+  function recoverFromError(err){
+    var detail = "";
+    try { detail = (err && err.message) ? err.message : (err ? String(err) : ""); } catch(e){}
+    try { console.error("English Daily error, recovering:", err); } catch(e){}
+    sessionState = null;
+    var sessionEl = document.getElementById("session");
+    if (sessionEl) sessionEl.hidden = true;
+    try { render(); } catch(e){}
+    var view = document.getElementById("view");
+    if (view){
+      var note = document.createElement("div");
+      note.className = "empty-note";
+      note.textContent = "Sesi terhenti karena kendala teknis. Silakan mulai lagi." + (detail ? (" [" + detail + "]") : "");
+      view.prepend(note);
+      setTimeout(function(){ note.remove(); }, 8000);
+    }
+  }
+
+  document.addEventListener("click", function(e){
+    try {
+      var tabBtn = e.target.closest(".tab");
+      if (tabBtn){ setTab(tabBtn.getAttribute("data-tab")); return; }
+
+      var actionEl = e.target.closest("[data-action]");
+      if (!actionEl || actionEl.disabled) return;
+      var action = actionEl.getAttribute("data-action");
+
+      if (action === "start-session") startSession(false);
+      else if (action === "start-session-extra") startSession(true);
+      else if (action === "study-next"){ sessionState.studyIndex += 1; renderSession(); }
+      else if (action === "vocab-answer"){
+        if (sessionState.vocabAnswered) return;
+        var vItem = sessionState.quizList[sessionState.quizIndex];
+        var vWord = vocabById(vItem.wordId);
+        var chosen = actionEl.getAttribute("data-word");
+        sessionState.vocabAnswered = true;
+        sessionState.vocabChosen = chosen;
+        sessionState.vocabCorrect = (chosen === vWord.word);
+        renderSession();
+      }
+      else if (action === "vocab-continue"){
+        var cItem = sessionState.quizList[sessionState.quizIndex];
+        var cWord = vocabById(cItem.wordId);
+        var cToday = todayStr();
+        var cPrev = state.reviewStates[cWord.id] || freshReviewState(cWord.id, cToday);
+        var cQuality = sessionState.vocabCorrect ? 4 : 0;
+        state.reviewStates[cWord.id] = scheduleNextReview(cPrev, cQuality, cToday);
+        persist();
+        if (cItem.isNew) sessionState.tally.introduced += 1; else sessionState.tally.reviewed += 1;
+        sessionState.quizIndex += 1;
+        sessionState.vocabAnswered = false;
+        sessionState.vocabChosen = null;
+        sessionState.vocabCorrect = false;
+        sessionState.vocabOptions = null;
+        renderSession();
+      }
+      else if (action === "start-quiz"){ sessionState.grammarQuizIndex = 0; sessionState.grammarQuizAnswered = false; renderSession(); }
+      else if (action === "answer"){
+        if (sessionState.grammarQuizAnswered) return;
+        sessionState.grammarQuizAnswered = true;
+        var topic = sessionState.grammarTopic;
+        var q = topic.quiz[sessionState.grammarQuizIndex];
+        var chosenIndex = parseInt(actionEl.getAttribute("data-index"), 10);
+        var buttons = document.querySelectorAll(".quiz-opt");
+        buttons.forEach(function(btn, i){
+          btn.disabled = true;
+          if (q.options[i] === q.answer) btn.classList.add("correct");
+          else if (i === chosenIndex) btn.classList.add("wrong");
+        });
+        setTimeout(function(){
+          try {
+            if (!sessionState) return;
+            sessionState.grammarQuizIndex += 1;
+            sessionState.grammarQuizAnswered = false;
+            renderSession();
+          } catch(err){ recoverFromError(err); }
+        }, 700);
+      }
+      else if (action === "finish-session") endSession();
+      else if (action === "reset-progress-ask"){ resetConfirmOpen = true; render(); }
+      else if (action === "reset-progress-cancel"){ resetConfirmOpen = false; render(); }
+      else if (action === "reset-progress-confirm") resetProgress();
+      else if (action === "export-progress") exportProgress();
+      else if (action === "import-progress"){
+        var fileInput = document.getElementById("import-file-input");
+        if (fileInput) fileInput.click();
+      }
+    } catch(err){ recoverFromError(err); }
+  });
+
+  document.addEventListener("change", function(e){
+    try {
+      if (e.target && e.target.id === "import-file-input" && e.target.files && e.target.files[0]){
+        importProgressFromFile(e.target.files[0]);
+        e.target.value = "";
+      }
+    } catch(err){ recoverFromError(err); }
+  });
+
+  document.getElementById("session-close").addEventListener("click", function(){
+    try { endSession(); } catch(err){ recoverFromError(err); }
+  });
+
+  /* ---------------- boot ---------------- */
+
+  document.addEventListener("visibilitychange", function(){
+    if (document.visibilityState === "hidden") flushPersist();
+  });
+  window.addEventListener("pagehide", flushPersist);
+
+  render();
+  initPersistence();
+})();
+</script>
+<script>
+  if ("serviceWorker" in navigator){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").catch(function(){ /* offline caching is a bonus, not required */ });
+    });
+  }
+</script>
+</body>
+</html>

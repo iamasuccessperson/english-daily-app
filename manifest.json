@@ -1,0 +1,15 @@
+{
+  "name": "English Daily",
+  "short_name": "English Daily",
+  "description": "Aplikasi belajar kosakata & grammar bahasa Inggris setiap hari.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F5F6FA",
+  "theme_color": "#2F5FE0",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
